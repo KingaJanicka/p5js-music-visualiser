@@ -6,16 +6,22 @@
   import P5, { type Sketch } from "p5-svelte";
   import type p5 from "p5";
   import exposure from "./exposure.frag";
-  import hueShift from "./hueShift.frag";
+  // import hueShift from "./hueShift.frag";
+  import contrastMatrix from "./contrastMatrixCustom.frag";
 
-  let expoureVal: float = $state(1);
+  let expoureVal: GLfloat = $state(1);
+  let color_shift_r: GLfloat = $state(0.5);
+  let color_shift_g: GLfloat = $state(0.5);
+  let color_shift_b: GLfloat = $state(0.5);
 
   const sketch: Sketch = (p5) => {
     // P5js vars
     let capture: p5.Element;
     let canvas: p5.Renderer;
     let exposureFilter: any;
-    let hueShiftFilter: any;
+    // let hueShiftFilter: any;
+    let contrastMatrixFilter: any;
+
     let constraints = {
       video: {
         mandatory: {
@@ -33,8 +39,10 @@
       capture = p5.createCapture(constraints);
       /* @ts-expect-error shrug */
       exposureFilter = p5.createFilterShader(exposure);
+      // /* @ts-expect-error shrug */
+      // hueShiftFilter = p5.createFilterShader(hueShift);
       /* @ts-expect-error shrug */
-      hueShiftFilter = p5.createFilterShader(hueShift);
+      contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
     };
 
     p5.draw = () => {
@@ -48,10 +56,17 @@
       // p5.filter("invert");
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
+
       exposureFilter.setUniform("lightness", expoureVal);
       p5.filter(exposureFilter);
+
       // hueShiftFilter.setUniform("angle", 0.5);
       // p5.filter(hueShiftFilter);
+
+      contrastMatrixFilter.setUniform("red", color_shift_r);
+      contrastMatrixFilter.setUniform("green", color_shift_g);
+      contrastMatrixFilter.setUniform("blue", color_shift_b);
+      p5.filter(contrastMatrixFilter);
     };
   };
 </script>
@@ -82,8 +97,38 @@
         min="-2.5"
         max="2.5"
       />
-      <P5 {sketch} />
     </div>
+    <div>
+      <p>Red</p>
+      <input
+        type="range"
+        step="0.01"
+        bind:value={color_shift_r}
+        min="0"
+        max="1"
+      />
+    </div>
+    <div>
+      <p>Green</p>
+      <input
+        type="range"
+        step="0.01"
+        bind:value={color_shift_g}
+        min="0"
+        max="1"
+      />
+    </div>
+    <div>
+      <p>Blue</p>
+      <input
+        type="range"
+        step="0.01"
+        bind:value={color_shift_b}
+        min="0"
+        max="1"
+      />
+    </div>
+    <P5 {sketch} />
   </div>
 
   <p>

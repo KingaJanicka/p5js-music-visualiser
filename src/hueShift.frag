@@ -17,5 +17,5 @@ uniform float angle;
 void main() {
   // get the color at current pixel
   vec4 color = texture2D(tex0, vTexCoord);
-  gl_FragColor = exposure(vec4(color.rgb, 1.0), float(angle));
+  gl_FragColor = hueShift(vec4(color.rgb, 1.0), float(angle));
 }
