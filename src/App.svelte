@@ -5,12 +5,17 @@
   import PWABadge from "./lib/PWABadge.svelte";
   import P5, { type Sketch } from "p5-svelte";
   import type p5 from "p5";
-  import exposure from "../lygia/color/exposure.hlsl";
+  import exposure from "./exposure.frag";
+  import hueShift from "./hueShift.frag";
+
+  let expoureVal: float = $state(1);
+
   const sketch: Sketch = (p5) => {
     // P5js vars
     let capture: p5.Element;
     let canvas: p5.Renderer;
     let exposureFilter: any;
+    let hueShiftFilter: any;
     let constraints = {
       video: {
         mandatory: {
@@ -26,7 +31,10 @@
     p5.setup = () => {
       canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight, "webgl");
       capture = p5.createCapture(constraints);
-      exposureFilter = p5.createFilterShader(exposure(0.5, 0.5));
+      /* @ts-expect-error shrug */
+      exposureFilter = p5.createFilterShader(exposure);
+      /* @ts-expect-error shrug */
+      hueShiftFilter = p5.createFilterShader(hueShift);
     };
 
     p5.draw = () => {
@@ -37,10 +45,13 @@
         capture.width,
         capture.height,
       );
-      p5.filter("invert");
-      p5.filter("blur", 0.85);
-      p5.filter("gray");
-      // p5.filter(exposureFilter);
+      // p5.filter("invert");
+      // p5.filter("blur", 0.85);
+      // p5.filter("gray");
+      exposureFilter.setUniform("lightness", expoureVal);
+      p5.filter(exposureFilter);
+      // hueShiftFilter.setUniform("angle", 0.5);
+      // p5.filter(hueShiftFilter);
     };
   };
 </script>
@@ -62,8 +73,17 @@
 
   <div class="card">
     <Counter />
-
-    <P5 {sketch} />
+    <div>
+      <p>Exposure</p>
+      <input
+        type="range"
+        step="0.01"
+        bind:value={expoureVal}
+        min="-2.5"
+        max="2.5"
+      />
+      <P5 {sketch} />
+    </div>
   </div>
 
   <p>
