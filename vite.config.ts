@@ -1,10 +1,10 @@
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
-
+import glsl from 'vite-plugin-glsl';
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [svelte(), VitePWA({
+  plugins: [glsl(), svelte(), VitePWA({
     registerType: 'prompt',
     injectRegister: false,
 

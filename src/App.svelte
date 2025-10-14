@@ -3,15 +3,14 @@
   import appLogo from "/favicon.svg";
   import Counter from "./lib/Counter.svelte";
   import PWABadge from "./lib/PWABadge.svelte";
-
   import P5, { type Sketch } from "p5-svelte";
   import type p5 from "p5";
-
+  import exposure from "../lygia/color/exposure.hlsl";
   const sketch: Sketch = (p5) => {
-    let width = p5.windowWidth * 0.5;
-    let height = p5.windowHeight * 0.5;
+    // P5js vars
     let capture: p5.Element;
     let canvas: p5.Renderer;
+    let exposureFilter: any;
     let constraints = {
       video: {
         mandatory: {
@@ -23,9 +22,11 @@
       audio: false,
     };
 
+    //This is the init call for p5js
     p5.setup = () => {
       canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight, "webgl");
       capture = p5.createCapture(constraints);
+      exposureFilter = p5.createFilterShader(exposure(0.5, 0.5));
     };
 
     p5.draw = () => {
@@ -36,13 +37,17 @@
         capture.width,
         capture.height,
       );
-
       p5.filter("invert");
       p5.filter("blur", 0.85);
       p5.filter("gray");
+      // p5.filter(exposureFilter);
     };
   };
 </script>
+
+<svelte:head>
+  <script src="https://lygia.xyz/resolve.js"></script>
+</svelte:head>
 
 <main>
   <div>
