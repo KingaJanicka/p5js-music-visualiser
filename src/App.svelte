@@ -13,6 +13,10 @@
   let color_shift_r: GLfloat = $state(0.5);
   let color_shift_g: GLfloat = $state(0.5);
   let color_shift_b: GLfloat = $state(0.5);
+  let delayed_frame_buffer: Array<number> = [];
+  let frame_rate: number = 60;
+  let delay_in_seconds: number = 2;
+  let delay_in_frames = delay_in_seconds * frame_rate;
 
   const sketch: Sketch = (p5) => {
     // P5js vars
@@ -28,7 +32,7 @@
           minWidth: 1280,
           minHeight: 720,
         },
-        optional: [{ maxFrameRate: 60 }],
+        optional: [{ maxFrameRate: frame_rate }],
       },
       audio: false,
     };
@@ -46,6 +50,14 @@
     };
 
     p5.draw = () => {
+      delayed_frame_buffer.push(capture.get());
+
+      if (delayed_frame_buffer.length > delay_in_frames) {
+        delayed_frame_buffer.shift();
+      }
+      if (delayed_frame_buffer.length === delay_in_frames) {
+        p5.image(delayed_frame_buffer[0], 0, 0, 640, 480);
+      }
       p5.image(
         capture,
         -capture.width / 2,
