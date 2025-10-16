@@ -76,6 +76,15 @@
         capture.width,
         capture.height,
       );
+      p5.tint(255, feedbackOpacity);
+      p5.image(
+        prevFrame,
+        -capture.width / 2 + translateX,
+        -capture.height / 2 + translateY,
+        capture.width,
+        capture.height,
+      );
+      p5.tint(255, 255);
       // p5.filter("invert");
       // This is responsible for the main image
 
@@ -97,15 +106,6 @@
       contrastMatrixFilter.setUniform("contrast", colorShiftContrast);
       p5.filter(contrastMatrixFilter);
 
-      p5.tint(255, feedbackOpacity);
-      p5.image(
-        prevFrame,
-        -capture.width / 2 + translateX,
-        -capture.height / 2 + translateY,
-        capture.width,
-        capture.height,
-      );
-      p5.tint(255, 255);
       // For feedback loop
       nextFrame.end();
       p5.image(
