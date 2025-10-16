@@ -13,6 +13,8 @@
   let colorShiftR: GLfloat = $state(0.5);
   let colorShiftG: GLfloat = $state(0.5);
   let colorShiftB: GLfloat = $state(0.5);
+  let colorShiftBrightness: GLfloat = $state(0);
+  let colorShiftContrast: GLfloat = $state(0);
   let frameRate: number = 60;
   let prevFrame, nextFrame;
   let translateX: number = $state(0);
@@ -27,20 +29,20 @@
     // let hueShiftFilter: any;
     let contrastMatrixFilter: any;
 
-    let constraints = {
-      video: {
-        mandatory: {
-          minWidth: 1280,
-          minHeight: 720,
-        },
-        optional: [{ maxFrameRate: frameRate }],
-      },
-      audio: false,
-    };
-
     //This is the init call for p5js
     p5.setup = () => {
       canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight, "webgl");
+      let constraints = {
+        video: {
+          mandatory: {
+            minWidth: canvas.width,
+            minHeight: canvas.height,
+          },
+          optional: [{ maxFrameRate: frameRate }],
+        },
+        audio: false,
+      };
+
       capture = p5.createCapture(constraints);
       /* @ts-expect-error shrug */
       exposureFilter = p5.createFilterShader(exposure);
@@ -54,9 +56,6 @@
     };
 
     p5.draw = () => {
-      let captureWidth = capture.width;
-      let captureHeight = capture.height;
-
       let prevNew;
       let nextNew;
       // Feedback loop
@@ -69,23 +68,14 @@
       p5.clear();
       p5.push();
 
-      p5.image(
-        prevFrame,
-        -captureWidth / 2 + translateX,
-        -captureHeight / 2 + translateY,
-        captureWidth,
-        captureHeight,
-      );
-      p5.tint(255, 255, 255, feedbackOpacity);
-
+      p5.tint(255, 255);
       p5.image(
         capture,
-        -captureWidth / 2,
-        -captureHeight / 2,
-        captureWidth,
-        captureHeight,
+        -capture.width / 2,
+        -capture.height / 2,
+        capture.width,
+        capture.height,
       );
-      p5.tint(255, 255, 255, 255);
       // p5.filter("invert");
       // This is responsible for the main image
 
@@ -94,8 +84,8 @@
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
 
-      exposureFilter.setUniform("lightness", expoureVal);
-      p5.filter(exposureFilter);
+      // exposureFilter.setUniform("lightness", expoureVal);
+      // p5.filter(exposureFilter);
 
       // hueShiftFilter.setUniform("angle", 0.5);
       // p5.filter(hueShiftFilter);
@@ -103,16 +93,27 @@
       contrastMatrixFilter.setUniform("red", colorShiftR);
       contrastMatrixFilter.setUniform("green", colorShiftG);
       contrastMatrixFilter.setUniform("blue", colorShiftB);
+      contrastMatrixFilter.setUniform("brightness", colorShiftBrightness);
+      contrastMatrixFilter.setUniform("contrast", colorShiftContrast);
       p5.filter(contrastMatrixFilter);
 
+      p5.tint(255, feedbackOpacity);
+      p5.image(
+        prevFrame,
+        -capture.width / 2 + translateX,
+        -capture.height / 2 + translateY,
+        capture.width,
+        capture.height,
+      );
+      p5.tint(255, 255);
       // For feedback loop
       nextFrame.end();
       p5.image(
         nextFrame,
-        -captureWidth / 2,
-        -captureHeight / 2,
-        captureWidth,
-        captureHeight,
+        -capture.width / 2,
+        -capture.height / 2,
+        capture.width,
+        capture.height,
       );
       // p5.filter("invert");
     };
@@ -138,11 +139,21 @@
     <Counter />
     <div>
       <div>
-        <p>Exposure</p>
+        <p>brightness</p>
         <input
           type="range"
           step="0.01"
-          bind:value={expoureVal}
+          bind:value={colorShiftBrightness}
+          min="-2.5"
+          max="2.5"
+        />
+      </div>
+      <div>
+        <p>contrast</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={colorShiftContrast}
           min="-2.5"
           max="2.5"
         />

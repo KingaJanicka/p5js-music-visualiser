@@ -17,9 +17,12 @@ uniform vec2        u_resolution;
 uniform float red;
 uniform float green;
 uniform float blue;
+uniform float brightness;
+uniform float contrast;
 
 #include "../lygia/color/brightnessMatrix.glsl"
 #include "../lygia/color/contrastMatrix.glsl"
+
 
 void main (void) {
     vec4 color = vec4(red,green,blue,1.00);
@@ -27,8 +30,8 @@ void main (void) {
     vec2 st = gl_FragCoord.xy * pixel;
 
     vec4 tex0 = texture2D(tex0, vTexCoord);
-    mat4 brightness = brightnessMatrix(0.7 * step(0.5, st.x));
-    mat4 contrast = contrastMatrix(1.9 + 1.0 * step(0.5, st.y));
+    mat4 brightness = brightnessMatrix((0.7 + brightness) * step(0.5, st.x));
+    mat4 contrast = contrastMatrix(1.9 + (1.0 + contrast) * step(0.5, st.y));
     color = brightness * contrast * tex0 * color;
 
     gl_FragColor = color;
