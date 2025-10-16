@@ -15,6 +15,9 @@
   let colorShiftB: GLfloat = $state(0.5);
   let frameRate: number = 60;
   let prevFrame, nextFrame;
+  let translateX: number = $state(0);
+  let translateY: number = $state(0);
+  let feedbackOpacity: number = $state(127);
 
   const sketch: Sketch = (p5) => {
     // P5js vars
@@ -65,6 +68,16 @@
       nextFrame.begin();
       p5.clear();
       p5.push();
+
+      p5.image(
+        prevFrame,
+        -captureWidth / 2 + translateX,
+        -captureHeight / 2 + translateY,
+        captureWidth,
+        captureHeight,
+      );
+      p5.tint(255, 255, 255, feedbackOpacity);
+
       p5.image(
         capture,
         -captureWidth / 2,
@@ -72,15 +85,7 @@
         captureWidth,
         captureHeight,
       );
-      p5.translate(p5.frameCount * 0.3, p5.frameCount * 0.33);
-      p5.tint(255, 127);
-      p5.image(
-        prevFrame,
-        -captureWidth / 2,
-        -captureHeight / 2,
-        captureWidth,
-        captureHeight,
-      );
+      p5.tint(255, 255, 255, 255);
       // p5.filter("invert");
       // This is responsible for the main image
 
@@ -89,16 +94,16 @@
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
 
-      // exposureFilter.setUniform("lightness", expoureVal);
-      // p5.filter(exposureFilter);
+      exposureFilter.setUniform("lightness", expoureVal);
+      p5.filter(exposureFilter);
 
       // hueShiftFilter.setUniform("angle", 0.5);
       // p5.filter(hueShiftFilter);
 
-      // contrastMatrixFilter.setUniform("red", colorShiftR);
-      // contrastMatrixFilter.setUniform("green", colorShiftG);
-      // contrastMatrixFilter.setUniform("blue", colorShiftB);
-      // p5.filter(contrastMatrixFilter);
+      contrastMatrixFilter.setUniform("red", colorShiftR);
+      contrastMatrixFilter.setUniform("green", colorShiftG);
+      contrastMatrixFilter.setUniform("blue", colorShiftB);
+      p5.filter(contrastMatrixFilter);
 
       // For feedback loop
       nextFrame.end();
@@ -132,44 +137,78 @@
   <div class="card">
     <Counter />
     <div>
-      <p>Exposure</p>
-      <input
-        type="range"
-        step="0.01"
-        bind:value={expoureVal}
-        min="-2.5"
-        max="2.5"
-      />
+      <div>
+        <p>Exposure</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={expoureVal}
+          min="-2.5"
+          max="2.5"
+        />
+      </div>
+      <div>
+        <p>Red</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={colorShiftR}
+          min="0"
+          max="1"
+        />
+      </div>
+      <div>
+        <p>Green</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={colorShiftG}
+          min="0"
+          max="1"
+        />
+      </div>
+      <div>
+        <p>Blue</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={colorShiftB}
+          min="0"
+          max="1"
+        />
+      </div>
     </div>
     <div>
-      <p>Red</p>
-      <input
-        type="range"
-        step="0.01"
-        bind:value={colorShiftR}
-        min="0"
-        max="1"
-      />
-    </div>
-    <div>
-      <p>Green</p>
-      <input
-        type="range"
-        step="0.01"
-        bind:value={colorShiftG}
-        min="0"
-        max="1"
-      />
-    </div>
-    <div>
-      <p>Blue</p>
-      <input
-        type="range"
-        step="0.01"
-        bind:value={colorShiftB}
-        min="0"
-        max="1"
-      />
+      <div>
+        <p>Translate X</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={translateX}
+          min="-100"
+          max="100"
+        />
+      </div>
+      <div>
+        <p>Translate Y</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={translateY}
+          min="-100"
+          max="100"
+        />
+      </div>
+      <div>
+        <p>Feedback Opacity</p>
+        <input
+          type="range"
+          step="0.01"
+          bind:value={feedbackOpacity}
+          min="0"
+          max="255"
+        />
+      </div>
     </div>
     <P5 {sketch} />
   </div>
