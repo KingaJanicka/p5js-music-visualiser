@@ -65,23 +65,6 @@
       nextFrame.begin();
       p5.clear();
       p5.push();
-      p5.rotate(0.01);
-      p5.scale(0.99);
-      // Those image frames are either not drawn or empty
-      p5.image(
-        prevFrame,
-        -captureWidth / 2,
-        -captureHeight / 2,
-        captureWidth,
-        captureHeight,
-      );
-      p5.pop();
-      p5.translate(
-        p5.sin(p5.frameCount * 0.1) * 50,
-        p5.sin(p5.frameCount * 0.11) * 50,
-      );
-
-      // This is responsible for the main image
       p5.image(
         capture,
         -captureWidth / 2,
@@ -89,8 +72,20 @@
         captureWidth,
         captureHeight,
       );
+      p5.translate(p5.frameCount * 0.3, p5.frameCount * 0.33);
+      p5.tint(255, 127);
+      p5.image(
+        prevFrame,
+        -captureWidth / 2,
+        -captureHeight / 2,
+        captureWidth,
+        captureHeight,
+      );
+      // p5.filter("invert");
+      // This is responsible for the main image
 
-      p5.filter("invert");
+      // p5.filter("invert");
+      // p5.filter("invert");
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
 
@@ -114,6 +109,7 @@
         captureWidth,
         captureHeight,
       );
+      // p5.filter("invert");
     };
   };
 </script>
