@@ -10,13 +10,11 @@
   import contrastMatrix from "./contrastMatrixCustom.frag";
 
   let expoureVal: GLfloat = $state(1);
-  let color_shift_r: GLfloat = $state(0.5);
-  let color_shift_g: GLfloat = $state(0.5);
-  let color_shift_b: GLfloat = $state(0.5);
-  let delayed_frame_buffer: Array<number> = [];
-  let frame_rate: number = 60;
-  let delay_in_seconds: number = 2;
-  let delay_in_frames = delay_in_seconds * frame_rate;
+  let colorShiftR: GLfloat = $state(0.5);
+  let colorShiftG: GLfloat = $state(0.5);
+  let colorShiftB: GLfloat = $state(0.5);
+  let frameRate: number = 60;
+  let prevFrame, nextFrame;
 
   const sketch: Sketch = (p5) => {
     // P5js vars
@@ -32,7 +30,7 @@
           minWidth: 1280,
           minHeight: 720,
         },
-        optional: [{ maxFrameRate: frame_rate }],
+        optional: [{ maxFrameRate: frameRate }],
       },
       audio: false,
     };
@@ -47,38 +45,75 @@
       // hueShiftFilter = p5.createFilterShader(hueShift);
       /* @ts-expect-error shrug */
       contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
+      prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
+      nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
+      // p5.imageMode(p5.CENTER);
     };
 
     p5.draw = () => {
-      delayed_frame_buffer.push(capture.get());
+      let captureWidth = capture.width;
+      let captureHeight = capture.height;
 
-      if (delayed_frame_buffer.length > delay_in_frames) {
-        delayed_frame_buffer.shift();
-      }
-      if (delayed_frame_buffer.length === delay_in_frames) {
-        p5.image(delayed_frame_buffer[0], 0, 0, 640, 480);
-      }
+      let prevNew;
+      let nextNew;
+      // Feedback loop
+      prevNew = nextFrame;
+      nextNew = prevFrame;
+      nextFrame = nextNew;
+      prevFrame = prevNew;
+
+      nextFrame.begin();
+      p5.clear();
+      p5.push();
+      p5.rotate(0.01);
+      p5.scale(0.99);
+      // Those image frames are either not drawn or empty
+      p5.image(
+        prevFrame,
+        -captureWidth / 2,
+        -captureHeight / 2,
+        captureWidth,
+        captureHeight,
+      );
+      p5.pop();
+      p5.translate(
+        p5.sin(p5.frameCount * 0.1) * 50,
+        p5.sin(p5.frameCount * 0.11) * 50,
+      );
+
+      // This is responsible for the main image
       p5.image(
         capture,
-        -capture.width / 2,
-        -capture.height / 2,
-        capture.width,
-        capture.height,
+        -captureWidth / 2,
+        -captureHeight / 2,
+        captureWidth,
+        captureHeight,
       );
-      // p5.filter("invert");
+
+      p5.filter("invert");
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
 
-      exposureFilter.setUniform("lightness", expoureVal);
-      p5.filter(exposureFilter);
+      // exposureFilter.setUniform("lightness", expoureVal);
+      // p5.filter(exposureFilter);
 
       // hueShiftFilter.setUniform("angle", 0.5);
       // p5.filter(hueShiftFilter);
 
-      contrastMatrixFilter.setUniform("red", color_shift_r);
-      contrastMatrixFilter.setUniform("green", color_shift_g);
-      contrastMatrixFilter.setUniform("blue", color_shift_b);
-      p5.filter(contrastMatrixFilter);
+      // contrastMatrixFilter.setUniform("red", colorShiftR);
+      // contrastMatrixFilter.setUniform("green", colorShiftG);
+      // contrastMatrixFilter.setUniform("blue", colorShiftB);
+      // p5.filter(contrastMatrixFilter);
+
+      // For feedback loop
+      nextFrame.end();
+      p5.image(
+        nextFrame,
+        -captureWidth / 2,
+        -captureHeight / 2,
+        captureWidth,
+        captureHeight,
+      );
     };
   };
 </script>
@@ -115,7 +150,7 @@
       <input
         type="range"
         step="0.01"
-        bind:value={color_shift_r}
+        bind:value={colorShiftR}
         min="0"
         max="1"
       />
@@ -125,7 +160,7 @@
       <input
         type="range"
         step="0.01"
-        bind:value={color_shift_g}
+        bind:value={colorShiftG}
         min="0"
         max="1"
       />
@@ -135,7 +170,7 @@
       <input
         type="range"
         step="0.01"
-        bind:value={color_shift_b}
+        bind:value={colorShiftB}
         min="0"
         max="1"
       />
