@@ -8,6 +8,7 @@
   import exposure from "./exposure.frag";
   // import hueShift from "./hueShift.frag";
   import contrastMatrix from "./contrastMatrixCustom.frag";
+  import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
 
   let expoureVal: GLfloat = $state(1);
   let colorShiftR: GLfloat = $state(0.5);
@@ -85,11 +86,9 @@
         capture.height,
       );
       p5.tint(255, 255);
-      // p5.filter("invert");
+      // the invert makes things look rather coolx
+      p5.filter("invert");
       // This is responsible for the main image
-
-      // p5.filter("invert");
-      // p5.filter("invert");
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
 
@@ -134,7 +133,12 @@
     </a>
   </div>
   <h1>p5-music-vis</h1>
-
+  <VerticalSlider
+    type="range"
+    bind:valueToBind={colorShiftBrightness}
+    min="-2.5"
+    max="2.5">Farts, {colorShiftBrightness}</VerticalSlider
+  >
   <div class="card">
     <Counter />
     <div>

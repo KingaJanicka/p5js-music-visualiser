@@ -1,3 +1,3 @@
 TODO:
-I don't think the filters affect the feedback path?
 I need to break this down to components, getting too big 
+values are not binding correctly
