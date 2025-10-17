@@ -9,6 +9,7 @@
   // import hueShift from "./hueShift.frag";
   import contrastMatrix from "./contrastMatrixCustom.frag";
   import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
+  import ToggleButton from "./components/toggleButton/toggleButton.svelte";
 
   let expoureVal: GLfloat = $state(1);
   let colorShiftR: GLfloat = $state(0.5);
@@ -20,8 +21,9 @@
   let prevFrame, nextFrame;
   let translateX: number = $state(0);
   let translateY: number = $state(0);
-  let feedbackWindowSize: number = $state(0);
+  let feedbackWindowSize: number = $state(1);
   let feedbackOpacity: number = $state(127);
+  let invertFeedbackOn: boolean = $state(true);
 
   const sketch: Sketch = (p5) => {
     // P5js vars
@@ -87,8 +89,10 @@
         capture.height * feedbackWindowSize,
       );
       p5.tint(255, 255);
-      // the invert makes things look rather coolx
-      p5.filter("invert");
+      if (invertFeedbackOn == true) {
+        // the invert makes things look rather cool
+        p5.filter("invert");
+      }
       // This is responsible for the main image
       // p5.filter("blur", 0.85);
       // p5.filter("gray");
@@ -115,7 +119,10 @@
         capture.width,
         capture.height,
       );
-      // p5.filter("invert");
+      //This inverts the inversion, so only the feedback path is inverted
+      if (invertFeedbackOn == true) {
+        p5.filter("invert");
+      }
     };
   };
 </script>
@@ -136,62 +143,40 @@
   <h1>p5-music-vis</h1>
   <div class="card">
     <Counter />
-    <div class="colorSliders">
+    <div class="colorControls">
       <VerticalSlider
-        type="range"
         bind:valueToBind={colorShiftBrightness}
         min="-2.5"
         max="2.5">Brightness</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={colorShiftContrast}
-        min="-2.5"
-        max="2.5">Contrast</VerticalSlider
+      <VerticalSlider bind:valueToBind={colorShiftContrast} min="-2.5" max="2.5"
+        >Contrast</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={colorShiftR}
-        min="0"
-        max="1">Red</VerticalSlider
+      <VerticalSlider bind:valueToBind={colorShiftR} min="0" max="1"
+        >Red</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={colorShiftG}
-        min="0"
-        max="1">Green</VerticalSlider
+      <VerticalSlider bind:valueToBind={colorShiftG} min="0" max="1"
+        >Green</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={colorShiftB}
-        min="0"
-        max="1">Blue</VerticalSlider
+      <VerticalSlider bind:valueToBind={colorShiftB} min="0" max="1"
+        >Blue</VerticalSlider
       >
     </div>
-    <div class="feedbackSliders">
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={translateX}
-        min="-100"
-        max="100">Translate X</VerticalSlider
+    <div class="feedbackControls">
+      <VerticalSlider bind:valueToBind={translateX} min="-100" max="100"
+        >Translate X</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={translateY}
-        min="-100"
-        max="100">Translate Y</VerticalSlider
+      <VerticalSlider bind:valueToBind={translateY} min="-100" max="100"
+        >Translate Y</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={feedbackWindowSize}
-        min="0"
-        max="1">Feedback Size</VerticalSlider
+      <VerticalSlider bind:valueToBind={feedbackWindowSize} min="0" max="1"
+        >Feedback Size</VerticalSlider
       >
-      <VerticalSlider
-        type="range"
-        bind:valueToBind={feedbackOpacity}
-        min="0"
-        max="255">Feedback Opacity</VerticalSlider
+      <VerticalSlider bind:valueToBind={feedbackOpacity} min="0" max="255"
+        >Feedback Opacity</VerticalSlider
+      >
+      <ToggleButton bind:valueToBind={invertFeedbackOn}
+        >Invert Feedback</ToggleButton
       >
     </div>
     <P5 {sketch} />
@@ -226,12 +211,12 @@
   .read-the-docs {
     color: #888;
   }
-  .colorSliders {
+  .colorControls {
     display: flex;
     justify-content: center;
   }
 
-  .feedbackSliders {
+  .feedbackControls {
     display: flex;
     justify-content: center;
   }

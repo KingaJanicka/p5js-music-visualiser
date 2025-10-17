@@ -6,7 +6,7 @@
 <div>
     <p>{@render props.children()}, {valueToBind}</p>
     <input
-        type={props.type}
+        type="range"
         step="0.01"
         bind:value={valueToBind}
         min={props.min}
@@ -16,7 +16,8 @@
 
 <style>
     input {
-        writing-mode: vertical-rl;
+        writing-mode: vertical-lr;
+        direction: rtl;
         padding: 0em 5em;
     }
 </style>
