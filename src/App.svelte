@@ -20,6 +20,7 @@
   let prevFrame, nextFrame;
   let translateX: number = $state(0);
   let translateY: number = $state(0);
+  let feedbackWindowSize: number = $state(0);
   let feedbackOpacity: number = $state(127);
 
   const sketch: Sketch = (p5) => {
@@ -32,7 +33,7 @@
 
     //This is the init call for p5js
     p5.setup = () => {
-      canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight, "webgl");
+      canvas = p5.createCanvas(640, 480, "webgl");
       let constraints = {
         video: {
           mandatory: {
@@ -80,10 +81,10 @@
       p5.tint(255, feedbackOpacity);
       p5.image(
         prevFrame,
-        -capture.width / 2 + translateX,
-        -capture.height / 2 + translateY,
-        capture.width,
-        capture.height,
+        (-capture.width * feedbackWindowSize) / 2 + translateX,
+        (-capture.height * feedbackWindowSize) / 2 + translateY,
+        capture.width * feedbackWindowSize,
+        capture.height * feedbackWindowSize,
       );
       p5.tint(255, 255);
       // the invert makes things look rather coolx
@@ -133,97 +134,65 @@
     </a>
   </div>
   <h1>p5-music-vis</h1>
-  <VerticalSlider
-    type="range"
-    bind:valueToBind={colorShiftBrightness}
-    min="-2.5"
-    max="2.5">Farts, {colorShiftBrightness}</VerticalSlider
-  >
   <div class="card">
     <Counter />
-    <div>
-      <div>
-        <p>brightness</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={colorShiftBrightness}
-          min="-2.5"
-          max="2.5"
-        />
-      </div>
-      <div>
-        <p>contrast</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={colorShiftContrast}
-          min="-2.5"
-          max="2.5"
-        />
-      </div>
-      <div>
-        <p>Red</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={colorShiftR}
-          min="0"
-          max="1"
-        />
-      </div>
-      <div>
-        <p>Green</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={colorShiftG}
-          min="0"
-          max="1"
-        />
-      </div>
-      <div>
-        <p>Blue</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={colorShiftB}
-          min="0"
-          max="1"
-        />
-      </div>
+    <div class="colorSliders">
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={colorShiftBrightness}
+        min="-2.5"
+        max="2.5">Brightness</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={colorShiftContrast}
+        min="-2.5"
+        max="2.5">Contrast</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={colorShiftR}
+        min="0"
+        max="1">Red</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={colorShiftG}
+        min="0"
+        max="1">Green</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={colorShiftB}
+        min="0"
+        max="1">Blue</VerticalSlider
+      >
     </div>
-    <div>
-      <div>
-        <p>Translate X</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={translateX}
-          min="-100"
-          max="100"
-        />
-      </div>
-      <div>
-        <p>Translate Y</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={translateY}
-          min="-100"
-          max="100"
-        />
-      </div>
-      <div>
-        <p>Feedback Opacity</p>
-        <input
-          type="range"
-          step="0.01"
-          bind:value={feedbackOpacity}
-          min="0"
-          max="255"
-        />
-      </div>
+    <div class="feedbackSliders">
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={translateX}
+        min="-100"
+        max="100">Translate X</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={translateY}
+        min="-100"
+        max="100">Translate Y</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={feedbackWindowSize}
+        min="0"
+        max="1">Feedback Size</VerticalSlider
+      >
+      <VerticalSlider
+        type="range"
+        bind:valueToBind={feedbackOpacity}
+        min="0"
+        max="255">Feedback Opacity</VerticalSlider
+      >
     </div>
     <P5 {sketch} />
   </div>
@@ -256,5 +225,14 @@
   }
   .read-the-docs {
     color: #888;
+  }
+  .colorSliders {
+    display: flex;
+    justify-content: center;
+  }
+
+  .feedbackSliders {
+    display: flex;
+    justify-content: center;
   }
 </style>

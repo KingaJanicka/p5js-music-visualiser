@@ -1,3 +1,2 @@
 TODO:
-I need to break this down to components, getting too big 
-values are not binding correctly
+

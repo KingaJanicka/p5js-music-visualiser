@@ -13,3 +13,10 @@
         max={props.max}
     />
 </div>
+
+<style>
+    input {
+        writing-mode: vertical-rl;
+        padding: 0em 5em;
+    }
+</style>
