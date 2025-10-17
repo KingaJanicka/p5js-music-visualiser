@@ -11,19 +11,32 @@
   import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
   import ToggleButton from "./components/toggleButton/toggleButton.svelte";
 
-  let expoureVal: GLfloat = $state(1);
-  let colorShiftR: GLfloat = $state(0.5);
-  let colorShiftG: GLfloat = $state(0.5);
-  let colorShiftB: GLfloat = $state(0.5);
-  let colorShiftBrightness: GLfloat = $state(0);
-  let colorShiftContrast: GLfloat = $state(0);
   let frameRate: number = 60;
   let prevFrame, nextFrame;
-  let translateX: number = $state(0);
-  let translateY: number = $state(0);
-  let feedbackWindowSize: number = $state(1);
-  let feedbackOpacity: number = $state(127);
-  let invertFeedbackOn: boolean = $state(true);
+
+  let colorShiftRDefault: GLfloat = 0.5;
+  let colorShiftR: GLfloat = $state(colorShiftRDefault);
+  let colorShiftGDefault: GLfloat = 0.5;
+  let colorShiftG: GLfloat = $state(colorShiftGDefault);
+  let colorShiftBDefault: GLfloat = 0.5;
+  let colorShiftB: GLfloat = $state(colorShiftBDefault);
+  let colorShiftBrightnessDefault: GLfloat = 0;
+  let colorShiftBrightness: GLfloat = $state(colorShiftBrightnessDefault);
+  let colorShiftContrastDefault: GLfloat = -1;
+  let colorShiftContrast: GLfloat = $state(colorShiftContrastDefault);
+
+  let translateXDefault: number = 0;
+  let translateX: number = $state(translateXDefault);
+  let translateYDefault: number = 0;
+  let translateY: number = $state(translateYDefault);
+  let feedbackWindowSizeDefault: number = 1;
+  let feedbackWindowSize: number = $state(feedbackWindowSizeDefault);
+  let feedbackOpacityDefault: number = 127;
+  let feedbackOpacity: number = $state(feedbackOpacityDefault);
+  let feedbackInvertDefault: boolean = true;
+  let feedbackInvert: boolean = $state(feedbackInvertDefault);
+  let feedbackRotationDefault: number = 0;
+  let feedbackRotation: number = $state(feedbackRotationDefault);
 
   const sketch: Sketch = (p5) => {
     // P5js vars
@@ -81,6 +94,9 @@
         capture.height,
       );
       p5.tint(255, feedbackOpacity);
+      p5.rotate(feedbackRotation);
+      p5.push();
+      p5.pop();
       p5.image(
         prevFrame,
         (-capture.width * feedbackWindowSize) / 2 + translateX,
@@ -89,7 +105,7 @@
         capture.height * feedbackWindowSize,
       );
       p5.tint(255, 255);
-      if (invertFeedbackOn == true) {
+      if (feedbackInvert == true) {
         // the invert makes things look rather cool
         p5.filter("invert");
       }
@@ -120,7 +136,7 @@
         capture.height,
       );
       //This inverts the inversion, so only the feedback path is inverted
-      if (invertFeedbackOn == true) {
+      if (feedbackInvert == true) {
         p5.filter("invert");
       }
     };
@@ -132,51 +148,74 @@
 </svelte:head>
 
 <main>
-  <div>
-    <a href="https://vite.dev" target="_blank" rel="noreferrer">
-      <img src={appLogo} class="logo" alt="p5-music-vis Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
   <h1>p5-music-vis</h1>
   <div class="card">
     <Counter />
     <div class="colorControls">
       <VerticalSlider
         bind:valueToBind={colorShiftBrightness}
+        default={colorShiftBrightnessDefault}
         min="-2.5"
         max="2.5">Brightness</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={colorShiftContrast} min="-2.5" max="2.5"
-        >Contrast</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={colorShiftContrast}
+        default={colorShiftContrastDefault}
+        min="-2.5"
+        max="2.5">Contrast</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={colorShiftR} min="0" max="1"
-        >Red</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={colorShiftR}
+        default={colorShiftRDefault}
+        min="0"
+        max="1">Red</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={colorShiftG} min="0" max="1"
-        >Green</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={colorShiftG}
+        default={colorShiftGDefault}
+        min="0"
+        max="1">Green</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={colorShiftB} min="0" max="1"
-        >Blue</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={colorShiftB}
+        default={colorShiftBDefault}
+        min="0"
+        max="1">Blue</VerticalSlider
       >
     </div>
     <div class="feedbackControls">
-      <VerticalSlider bind:valueToBind={translateX} min="-100" max="100"
-        >Translate X</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={translateX}
+        default={translateXDefault}
+        min="-100"
+        max="100">Translate X</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={translateY} min="-100" max="100"
-        >Translate Y</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={translateY}
+        default={translateYDefault}
+        min="-100"
+        max="100">Translate Y</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={feedbackWindowSize} min="0" max="1"
-        >Feedback Size</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={feedbackWindowSize}
+        default={feedbackWindowSizeDefault}
+        min="0"
+        max="2">Feedback Size</VerticalSlider
       >
-      <VerticalSlider bind:valueToBind={feedbackOpacity} min="0" max="255"
-        >Feedback Opacity</VerticalSlider
+      <VerticalSlider
+        bind:valueToBind={feedbackOpacity}
+        default={feedbackOpacityDefault}
+        min="0"
+        max="255">Feedback Opacity</VerticalSlider
       >
-      <ToggleButton bind:valueToBind={invertFeedbackOn}
+      <ToggleButton bind:valueToBind={feedbackInvert}
         >Invert Feedback</ToggleButton
+      >
+      <VerticalSlider
+        bind:valueToBind={feedbackRotation}
+        default={feedbackRotationDefault}
+        min="-3.14"
+        max="3.14">Feedback Skew</VerticalSlider
       >
     </div>
     <P5 {sketch} />
@@ -196,18 +235,6 @@
 <PWABadge />
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
   .read-the-docs {
     color: #888;
   }
