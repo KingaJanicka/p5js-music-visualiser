@@ -13,7 +13,9 @@
 
   let frameRate: number = 60;
   let prevFrame, nextFrame;
+  let video_path = "/cat_pupils.webm";
 
+  //Declerations for colour page
   let colorShiftRDefault: GLfloat = 0.5;
   let colorShiftR: GLfloat = $state(colorShiftRDefault);
   let colorShiftGDefault: GLfloat = 0.5;
@@ -22,9 +24,10 @@
   let colorShiftB: GLfloat = $state(colorShiftBDefault);
   let colorShiftBrightnessDefault: GLfloat = 0;
   let colorShiftBrightness: GLfloat = $state(colorShiftBrightnessDefault);
-  let colorShiftContrastDefault: GLfloat = -1;
+  let colorShiftContrastDefault: GLfloat = -0.5;
   let colorShiftContrast: GLfloat = $state(colorShiftContrastDefault);
 
+  //Declerations for Feedback page
   let translateXDefault: number = 0;
   let translateX: number = $state(translateXDefault);
   let translateYDefault: number = 0;
@@ -33,7 +36,7 @@
   let feedbackWindowSize: number = $state(feedbackWindowSizeDefault);
   let feedbackOpacityDefault: number = 127;
   let feedbackOpacity: number = $state(feedbackOpacityDefault);
-  let feedbackInvertDefault: boolean = true;
+  let feedbackInvertDefault: boolean = false;
   let feedbackInvert: boolean = $state(feedbackInvertDefault);
   let feedbackRotationDefault: number = 0;
   let feedbackRotation: number = $state(feedbackRotationDefault);
@@ -45,7 +48,7 @@
     let exposureFilter: any;
     // let hueShiftFilter: any;
     let contrastMatrixFilter: any;
-
+    let video: p5.MediaElement;
     //This is the init call for p5js
     p5.setup = () => {
       canvas = p5.createCanvas(640, 480, "webgl");
@@ -61,6 +64,7 @@
       };
 
       capture = p5.createCapture(constraints);
+      video = p5.createVideo([video_path]);
       /* @ts-expect-error shrug */
       exposureFilter = p5.createFilterShader(exposure);
       // /* @ts-expect-error shrug */
@@ -70,6 +74,7 @@
       prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
       nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
       // p5.imageMode(p5.CENTER);
+      video.loop();
     };
 
     p5.draw = () => {
@@ -87,7 +92,7 @@
 
       p5.tint(255, 255);
       p5.image(
-        capture,
+        video,
         -capture.width / 2,
         -capture.height / 2,
         capture.width,
@@ -150,7 +155,6 @@
 <main>
   <h1>p5-music-vis</h1>
   <div class="card">
-    <Counter />
     <div class="colorControls">
       <VerticalSlider
         bind:valueToBind={colorShiftBrightness}
