@@ -36,7 +36,7 @@
   let feedbackWindowSize: number = $state(feedbackWindowSizeDefault);
   let feedbackOpacityDefault: number = 127;
   let feedbackOpacity: number = $state(feedbackOpacityDefault);
-  let feedbackInvertDefault: boolean = false;
+  let feedbackInvertDefault: boolean = true;
   let feedbackInvert: boolean = $state(feedbackInvertDefault);
   let feedbackRotationDefault: number = 0;
   let feedbackRotation: number = $state(feedbackRotationDefault);
@@ -92,7 +92,7 @@
 
       p5.tint(255, 255);
       p5.image(
-        video,
+        capture,
         -capture.width / 2,
         -capture.height / 2,
         capture.width,
