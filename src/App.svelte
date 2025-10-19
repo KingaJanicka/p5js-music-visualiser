@@ -1,12 +1,7 @@
 <script lang="ts">
-  import svelteLogo from "./assets/svelte.svg";
-  // import appLogo from "/favicon.svg";
-  import Counter from "./lib/Counter.svelte";
-  import PWABadge from "./lib/PWABadge.svelte";
   import P5, { type Sketch } from "p5-svelte";
   import type p5 from "p5";
   import exposure from "./exposure.frag";
-  // import hueShift from "./hueShift.frag";
   import contrastMatrix from "./contrastMatrixCustom.frag";
   import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
   import ToggleButton from "./components/toggleButton/toggleButton.svelte";
@@ -14,11 +9,12 @@
   import { setContext } from "svelte";
 
   setContext("p5Setup", { p5Setup });
+
   let frameRate: number = 60;
   let prevFrame, nextFrame;
   let selectedVideoSource: string = $state("Camera");
   let menu: number = $state(0);
-  let global_p5: any;
+  let global_p5: p5;
   let video_path = "cat_pupils.webm";
   let videos = Object.keys(import.meta.glob("../public/*.webm")).map((d) =>
     d.split("/").pop(),
@@ -30,7 +26,6 @@
   let canvas: p5.Renderer;
   let exposureFilter: any;
   let videoSource: p5.Element;
-  // let hueShiftFilter: any;
   let contrastMatrixFilter: any;
   let video: p5.MediaElement;
 
@@ -83,61 +78,27 @@
 
     /* @ts-expect-error shrug */
     exposureFilter = global_p5.createFilterShader(exposure);
-    // /* @ts-expect-error shrug */
-    // hueShiftFilter = p5.createFilterShader(hueShift);
     /* @ts-expect-error shrug */
     contrastMatrixFilter = global_p5.createFilterShader(contrastMatrix);
     prevFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
     nextFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
-    // p5.imageMode(p5.CENTER);
 
     video.loop();
   }
 
   const sketch: Sketch = (p5) => {
     global_p5 = p5;
-    //This is the init call for p5js
-    // p5.setup = () => {
-    //   canvas = p5.createCanvas(640, 480, "webgl");
-    //   let constraints = {
-    //     video: {
-    //       mandatory: {
-    //         minWidth: canvas.width,
-    //         minHeight: canvas.height,
-    //       },
-    //       optional: [{ maxFrameRate: frameRate }],
-    //     },
-    //     audio: false,
-    //   };
-
-    //   capture = p5.createCapture(constraints);
-    //   video = p5.createVideo(["/" + video_path]);
-    //   /* @ts-expect-error shrug */
-    //   exposureFilter = p5.createFilterShader(exposure);
-    //   // /* @ts-expect-error shrug */
-    //   // hueShiftFilter = p5.createFilterShader(hueShift);
-    //   /* @ts-expect-error shrug */
-    //   contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
-    //   prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
-    //   nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
-    //   // p5.imageMode(p5.CENTER);
-    //   video.loop();
-
-    //   if (selectedVideoSource != "Camera") {
-    //     videoSource = video = p5.createVideo(["/" + selectedVideoSource]);
-    //   } else {
-    //     videoSource = p5.createCapture(constraints);
-    //   }
-    // };
 
     p5.setup = () => {
       p5Setup();
     };
 
     p5.draw = () => {
+      //This is for Visualiser 1
       let prevNew;
       let nextNew;
-      // Feedback loop
+      // Feedback loop,
+      // drawing the usual frame to the buffer
       prevNew = nextFrame;
       nextNew = prevFrame;
       nextFrame = nextNew;
@@ -167,19 +128,10 @@
         capture.height * feedbackWindowSize,
       );
       p5.tint(255, 255);
+
       if (feedbackInvert == true) {
-        // the invert makes things look rather cool
         p5.filter("invert");
       }
-      // This is responsible for the main image
-      // p5.filter("blur", 0.85);
-      // p5.filter("gray");
-
-      // exposureFilter.setUniform("lightness", expoureVal);
-      // p5.filter(exposureFilter);
-
-      // hueShiftFilter.setUniform("angle", 0.5);
-      // p5.filter(hueShiftFilter);
 
       contrastMatrixFilter.setUniform("red", colorShiftR);
       contrastMatrixFilter.setUniform("green", colorShiftG);
@@ -188,8 +140,9 @@
       contrastMatrixFilter.setUniform("contrast", colorShiftContrast);
       p5.filter(contrastMatrixFilter);
 
-      // For feedback loop
       nextFrame.end();
+      // This actually draws the frame
+      // from the buffer to the canvas
       p5.image(
         nextFrame,
         -capture.width / 2,
@@ -299,8 +252,6 @@
     <button onclick={() => (menu = 2)}>Visualizer 2</button>
   </ul>
 </main>
-
-<PWABadge />
 
 <style>
   .colorControls {

@@ -1,2 +1,5 @@
 TODO:
-find a way to skew the feedback image by X deg
+put controls into their own big component
+rename all controls
+add another frame buffer that will draw onto the canvas
+we can xfade with simple tint command
