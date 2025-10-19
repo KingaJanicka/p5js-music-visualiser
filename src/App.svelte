@@ -1,6 +1,6 @@
 <script lang="ts">
   import svelteLogo from "./assets/svelte.svg";
-  import appLogo from "/favicon.svg";
+  // import appLogo from "/favicon.svg";
   import Counter from "./lib/Counter.svelte";
   import PWABadge from "./lib/PWABadge.svelte";
   import P5, { type Sketch } from "p5-svelte";
@@ -10,10 +10,26 @@
   import contrastMatrix from "./contrastMatrixCustom.frag";
   import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
   import ToggleButton from "./components/toggleButton/toggleButton.svelte";
+  import DropdownMenu from "./components/dropdownMenu/dropdownMenu.svelte";
 
   let frameRate: number = 60;
   let prevFrame, nextFrame;
-  let video_path = "/cat_pupils.webm";
+  let selectedVideoSource: string = $state("Camera");
+  let menu: number = $state(0);
+  let video_path = "cat_pupils.webm";
+  let videos = Object.keys(import.meta.glob("../public/*.webm")).map((d) =>
+    d.split("/").pop(),
+  );
+  videos.push("Camera");
+
+  // P5js vars
+  let capture: p5.Element;
+  let canvas: p5.Renderer;
+  let exposureFilter: any;
+  let videoSource: p5.Element;
+  // let hueShiftFilter: any;
+  let contrastMatrixFilter: any;
+  let video: p5.MediaElement;
 
   //Declerations for colour page
   let colorShiftRDefault: GLfloat = 0.5;
@@ -41,40 +57,76 @@
   let feedbackRotationDefault: number = 0;
   let feedbackRotation: number = $state(feedbackRotationDefault);
 
-  const sketch: Sketch = (p5) => {
-    // P5js vars
-    let capture: p5.Element;
-    let canvas: p5.Renderer;
-    let exposureFilter: any;
-    // let hueShiftFilter: any;
-    let contrastMatrixFilter: any;
-    let video: p5.MediaElement;
-    //This is the init call for p5js
-    p5.setup = () => {
-      canvas = p5.createCanvas(640, 480, "webgl");
-      let constraints = {
-        video: {
-          mandatory: {
-            minWidth: canvas.width,
-            minHeight: canvas.height,
-          },
-          optional: [{ maxFrameRate: frameRate }],
+  function p5Setup(p5) {
+    canvas = p5.createCanvas(640, 480, "webgl");
+    let constraints = {
+      video: {
+        mandatory: {
+          minWidth: canvas.width,
+          minHeight: canvas.height,
         },
-        audio: false,
-      };
+        optional: [{ maxFrameRate: frameRate }],
+      },
+      audio: false,
+    };
 
-      capture = p5.createCapture(constraints);
-      video = p5.createVideo([video_path]);
-      /* @ts-expect-error shrug */
-      exposureFilter = p5.createFilterShader(exposure);
-      // /* @ts-expect-error shrug */
-      // hueShiftFilter = p5.createFilterShader(hueShift);
-      /* @ts-expect-error shrug */
-      contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
-      prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
-      nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
-      // p5.imageMode(p5.CENTER);
-      video.loop();
+    capture = p5.createCapture(constraints);
+    video = p5.createVideo(["/" + video_path]);
+    /* @ts-expect-error shrug */
+    exposureFilter = p5.createFilterShader(exposure);
+    // /* @ts-expect-error shrug */
+    // hueShiftFilter = p5.createFilterShader(hueShift);
+    /* @ts-expect-error shrug */
+    contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
+    prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
+    nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
+    // p5.imageMode(p5.CENTER);
+    video.loop();
+
+    if (selectedVideoSource != "Camera") {
+      videoSource = video = p5.createVideo(["/" + selectedVideoSource]);
+    } else {
+      videoSource = p5.createCapture(constraints);
+    }
+  }
+
+  const sketch: Sketch = (p5) => {
+    //This is the init call for p5js
+    // p5.setup = () => {
+    //   canvas = p5.createCanvas(640, 480, "webgl");
+    //   let constraints = {
+    //     video: {
+    //       mandatory: {
+    //         minWidth: canvas.width,
+    //         minHeight: canvas.height,
+    //       },
+    //       optional: [{ maxFrameRate: frameRate }],
+    //     },
+    //     audio: false,
+    //   };
+
+    //   capture = p5.createCapture(constraints);
+    //   video = p5.createVideo(["/" + video_path]);
+    //   /* @ts-expect-error shrug */
+    //   exposureFilter = p5.createFilterShader(exposure);
+    //   // /* @ts-expect-error shrug */
+    //   // hueShiftFilter = p5.createFilterShader(hueShift);
+    //   /* @ts-expect-error shrug */
+    //   contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
+    //   prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
+    //   nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
+    //   // p5.imageMode(p5.CENTER);
+    //   video.loop();
+
+    //   if (selectedVideoSource != "Camera") {
+    //     videoSource = video = p5.createVideo(["/" + selectedVideoSource]);
+    //   } else {
+    //     videoSource = p5.createCapture(constraints);
+    //   }
+    // };
+
+    p5.setup = () => {
+      p5Setup(p5);
     };
 
     p5.draw = () => {
@@ -92,7 +144,7 @@
 
       p5.tint(255, 255);
       p5.image(
-        capture,
+        videoSource,
         -capture.width / 2,
         -capture.height / 2,
         capture.width,
@@ -153,95 +205,99 @@
 </svelte:head>
 
 <main>
-  <h1>p5-music-vis</h1>
-  <div class="card">
-    <div class="colorControls">
-      <VerticalSlider
-        bind:valueToBind={colorShiftBrightness}
-        default={colorShiftBrightnessDefault}
-        min="-2.5"
-        max="2.5">Brightness</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={colorShiftContrast}
-        default={colorShiftContrastDefault}
-        min="-2.5"
-        max="2.5">Contrast</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={colorShiftR}
-        default={colorShiftRDefault}
-        min="0"
-        max="1">Red</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={colorShiftG}
-        default={colorShiftGDefault}
-        min="0"
-        max="1">Green</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={colorShiftB}
-        default={colorShiftBDefault}
-        min="0"
-        max="1">Blue</VerticalSlider
-      >
+  <P5 {sketch} />
+  {#if menu === 0}
+    <div class="pageContainer">
+      <div class="colorControls">
+        <DropdownMenu
+          {videos}
+          bind:selectedItem={selectedVideoSource}
+          setupFunc={p5Setup()}
+        />
+        <VerticalSlider
+          bind:valueToBind={colorShiftBrightness}
+          default={colorShiftBrightnessDefault}
+          min="-2.5"
+          max="2.5">Brightness</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={colorShiftContrast}
+          default={colorShiftContrastDefault}
+          min="-2.5"
+          max="2.5">Contrast</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={colorShiftR}
+          default={colorShiftRDefault}
+          min="0"
+          max="1">Red</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={colorShiftG}
+          default={colorShiftGDefault}
+          min="0"
+          max="1">Green</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={colorShiftB}
+          default={colorShiftBDefault}
+          min="0"
+          max="1">Blue</VerticalSlider
+        >
+      </div>
+      <div class="feedbackControls">
+        <VerticalSlider
+          bind:valueToBind={translateX}
+          default={translateXDefault}
+          min="-100"
+          max="100">Translate X</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={translateY}
+          default={translateYDefault}
+          min="-100"
+          max="100">Translate Y</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={feedbackWindowSize}
+          default={feedbackWindowSizeDefault}
+          min="0"
+          max="2">Feedback Size</VerticalSlider
+        >
+        <VerticalSlider
+          bind:valueToBind={feedbackOpacity}
+          default={feedbackOpacityDefault}
+          min="0"
+          max="255">Feedback Opacity</VerticalSlider
+        >
+        <ToggleButton bind:valueToBind={feedbackInvert}
+          >Invert Feedback</ToggleButton
+        >
+        <VerticalSlider
+          bind:valueToBind={feedbackRotation}
+          default={feedbackRotationDefault}
+          min="-3.14"
+          max="3.14">Feedback Skew</VerticalSlider
+        >
+      </div>
     </div>
-    <div class="feedbackControls">
-      <VerticalSlider
-        bind:valueToBind={translateX}
-        default={translateXDefault}
-        min="-100"
-        max="100">Translate X</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={translateY}
-        default={translateYDefault}
-        min="-100"
-        max="100">Translate Y</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={feedbackWindowSize}
-        default={feedbackWindowSizeDefault}
-        min="0"
-        max="2">Feedback Size</VerticalSlider
-      >
-      <VerticalSlider
-        bind:valueToBind={feedbackOpacity}
-        default={feedbackOpacityDefault}
-        min="0"
-        max="255">Feedback Opacity</VerticalSlider
-      >
-      <ToggleButton bind:valueToBind={feedbackInvert}
-        >Invert Feedback</ToggleButton
-      >
-      <VerticalSlider
-        bind:valueToBind={feedbackRotation}
-        default={feedbackRotationDefault}
-        min="-3.14"
-        max="3.14">Feedback Skew</VerticalSlider
-      >
-    </div>
-    <P5 {sketch} />
-  </div>
-
-  <p>
-    Check out <a
-      href="https://github.com/sveltejs/kit#readme"
-      target="_blank"
-      rel="noreferrer">SvelteKit</a
-    >, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">Click on the Vite and Svelte logos to learn more</p>
+  {:else if menu === 1}
+    <div>Video mixer goes here</div>
+  {:else if menu === 2}
+    <div>Visualizer 2 goes here</div>
+  {:else}
+    <h1>You shouldn't be here, move along</h1>
+  {/if}
+  <ul id="menu">
+    <button onclick={() => (menu = 0)}>Visualizer 1</button>
+    <button onclick={() => (menu = 1)}>Video Mixer</button>
+    <button onclick={() => (menu = 2)}>Visualizer 2</button>
+  </ul>
 </main>
 
 <PWABadge />
 
 <style>
-  .read-the-docs {
-    color: #888;
-  }
   .colorControls {
     display: flex;
     justify-content: center;
