@@ -1,5 +1,8 @@
 <script lang="ts">
     // let props = $props();
+    import { getContext } from "svelte";
+    const { p5Setup } = getContext("p5Setup");
+
     let isMenuOn: boolean = $state(false);
     let { selectedItem = $bindable(), ...props } = $props();
     import { clickOutside } from "./clickOutside.js";
@@ -9,6 +12,7 @@
     function selectItem(item) {
         selectedItem = item;
         isMenuOn = false;
+        p5Setup();
     }
 </script>
 

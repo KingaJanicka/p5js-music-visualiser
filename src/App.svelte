@@ -11,11 +11,14 @@
   import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
   import ToggleButton from "./components/toggleButton/toggleButton.svelte";
   import DropdownMenu from "./components/dropdownMenu/dropdownMenu.svelte";
+  import { setContext } from "svelte";
 
+  setContext("p5Setup", { p5Setup });
   let frameRate: number = 60;
   let prevFrame, nextFrame;
   let selectedVideoSource: string = $state("Camera");
   let menu: number = $state(0);
+  let global_p5: any;
   let video_path = "cat_pupils.webm";
   let videos = Object.keys(import.meta.glob("../public/*.webm")).map((d) =>
     d.split("/").pop(),
@@ -57,8 +60,8 @@
   let feedbackRotationDefault: number = 0;
   let feedbackRotation: number = $state(feedbackRotationDefault);
 
-  function p5Setup(p5) {
-    canvas = p5.createCanvas(640, 480, "webgl");
+  function p5Setup() {
+    canvas = global_p5.createCanvas(640, 480, "webgl");
     let constraints = {
       video: {
         mandatory: {
@@ -70,27 +73,29 @@
       audio: false,
     };
 
-    capture = p5.createCapture(constraints);
-    video = p5.createVideo(["/" + video_path]);
+    capture = global_p5.createCapture(constraints);
+    video = global_p5.createVideo(["/" + video_path]);
+    if (selectedVideoSource != "Camera") {
+      videoSource = video = global_p5.createVideo(["/" + selectedVideoSource]);
+    } else {
+      videoSource = global_p5.createCapture(constraints);
+    }
+
     /* @ts-expect-error shrug */
-    exposureFilter = p5.createFilterShader(exposure);
+    exposureFilter = global_p5.createFilterShader(exposure);
     // /* @ts-expect-error shrug */
     // hueShiftFilter = p5.createFilterShader(hueShift);
     /* @ts-expect-error shrug */
-    contrastMatrixFilter = p5.createFilterShader(contrastMatrix);
-    prevFrame = p5.createFramebuffer({ format: p5.FLOAT });
-    nextFrame = p5.createFramebuffer({ format: p5.FLOAT });
+    contrastMatrixFilter = global_p5.createFilterShader(contrastMatrix);
+    prevFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
+    nextFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
     // p5.imageMode(p5.CENTER);
-    video.loop();
 
-    if (selectedVideoSource != "Camera") {
-      videoSource = video = p5.createVideo(["/" + selectedVideoSource]);
-    } else {
-      videoSource = p5.createCapture(constraints);
-    }
+    video.loop();
   }
 
   const sketch: Sketch = (p5) => {
+    global_p5 = p5;
     //This is the init call for p5js
     // p5.setup = () => {
     //   canvas = p5.createCanvas(640, 480, "webgl");
@@ -126,7 +131,7 @@
     // };
 
     p5.setup = () => {
-      p5Setup(p5);
+      p5Setup();
     };
 
     p5.draw = () => {
