@@ -78,7 +78,10 @@
   // let feedbackRotation: number = $state(feedbackRotationDefault);
 
   setContext("p5Setup", { p5Setup });
-  function p5Setup() {
+  function p5Setup(item = null) {
+    if (item != null) {
+      selectedVideoSource = item;
+    }
     canvas = global_p5.createCanvas(640, 480, "webgl");
     let constraints = {
       video: {

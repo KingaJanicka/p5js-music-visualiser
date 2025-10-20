@@ -3,16 +3,20 @@
     import { getContext } from "svelte";
     const { p5Setup } = getContext("p5Setup");
 
+    import { selectedVideoSource } from "../../sharedStore";
+
     let isMenuOn: boolean = $state(false);
     let { selectedItem = $bindable(), ...props } = $props();
     import { clickOutside } from "./clickOutside.js";
     function handleClickOutside(event) {
         isMenuOn = false;
     }
-    function selectItem(item) {
-        selectedItem = item;
+    function selectItem(item: string) {
+        // This should set selectedVideoSource in store
+        // but I can't figure out why it's not working
+        // So this will do for now
         isMenuOn = false;
-        p5Setup();
+        p5Setup(item);
     }
 </script>
 
@@ -36,8 +40,11 @@
                     onclick={() => selectItem(item)}>{item}</button
                 >
             {:else}
-                <button class="selectionButton" onclick={() => selectItem(item)}
-                    >{item}</button
+                <button
+                    class="selectionButton"
+                    onclick={() => {
+                        selectItem(item);
+                    }}>{item}</button
                 >
             {/if}
         {/each}
