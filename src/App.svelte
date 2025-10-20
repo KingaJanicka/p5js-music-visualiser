@@ -148,7 +148,7 @@
 <main>
   <P5 {sketch} />
   {#if $visualizerPage === 0}
-    <VisualizerControls visualizer={0} />
+    <VisualizerControls />
   {:else if $visualizerPage === 1}
     <div>Video mixer goes here</div>
   {:else if $visualizerPage === 2}
