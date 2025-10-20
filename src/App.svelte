@@ -4,6 +4,7 @@
   import exposure from "./exposure.frag";
   import contrastMatrix from "./contrastMatrixCustom.frag";
   import VisualizerControls from "./components/visualizerControls/visualizerControls.svelte";
+  import VideoMixerControls from "./components/videoMixerControls/videoMixerControls.svelte";
   import { setContext } from "svelte";
   import {
     colorShiftR_0,
@@ -30,6 +31,7 @@
     feedbackRotation_1,
     videos,
     visualizerPage,
+    visualizerCrossfade,
   } from "./sharedStore";
   import VisualizerPageSelector from "./components/visualizerPageSelector/visualizerPageSelector.svelte";
   let frameRate: number = 60;
@@ -161,7 +163,7 @@
   {#if $visualizerPage === 0}
     <VisualizerControls />
   {:else if $visualizerPage === 1}
-    <div>Video mixer goes here</div>
+    <VideoMixerControls />
   {:else if $visualizerPage === 2}
     <div>
       <VisualizerControls />
