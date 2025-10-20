@@ -23,7 +23,9 @@
     videos,
   } from "./sharedStore";
   let frameRate: number = 60;
-  let prevFrame, nextFrame;
+  let prevFrame: p5.Framebuffer;
+  let nextFrame: p5.Framebuffer;
+  let video_path = "cat_pupils.webm";
   let selectedVideoSource: string = $state("cat_pupils.webm");
   let menu: number = $state(0);
   let global_p5: p5;
@@ -88,9 +90,8 @@
       },
       audio: false,
     };
-
     capture = global_p5.createCapture(constraints);
-    //video = global_p5.createVideo(["/" + video_path]);
+    video = global_p5.createVideo(["/" + video_path]);
     if (selectedVideoSource != "Camera") {
       videoSource = video = global_p5.createVideo(["/" + selectedVideoSource]);
     } else {
@@ -154,11 +155,11 @@
         p5.filter("invert");
       }
 
-      contrastMatrixFilter.setUniform("red", colorShiftR);
-      contrastMatrixFilter.setUniform("green", colorShiftG);
-      contrastMatrixFilter.setUniform("blue", colorShiftB);
-      contrastMatrixFilter.setUniform("brightness", colorShiftBrightness);
-      contrastMatrixFilter.setUniform("contrast", colorShiftContrast);
+      contrastMatrixFilter.setUniform("red", $colorShiftR);
+      contrastMatrixFilter.setUniform("green", $colorShiftG);
+      contrastMatrixFilter.setUniform("blue", $colorShiftB);
+      contrastMatrixFilter.setUniform("brightness", $colorShiftBrightness);
+      contrastMatrixFilter.setUniform("contrast", $colorShiftContrast);
       p5.filter(contrastMatrixFilter);
 
       nextFrame.end();
