@@ -3,7 +3,7 @@
     import { getContext } from "svelte";
     const { p5Setup } = getContext("p5Setup");
 
-    import { selectedVideoSource } from "../../sharedStore";
+    // import { selectedVideoSource } from "../../sharedStore";
 
     let isMenuOn: boolean = $state(false);
     let { selectedItem = $bindable(), ...props } = $props();

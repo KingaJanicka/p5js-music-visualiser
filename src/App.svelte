@@ -6,17 +6,28 @@
   import VisualizerControls from "./components/visualizerControls/visualizerControls.svelte";
   import { setContext } from "svelte";
   import {
-    colorShiftR,
-    colorShiftG,
-    colorShiftB,
-    colorShiftBrightness,
-    colorShiftContrast,
-    translateX,
-    translateY,
-    feedbackWindowSize,
-    feedbackOpacity,
-    feedbackInvert,
-    feedbackRotation,
+    colorShiftR_0,
+    colorShiftR_1,
+    colorShiftG_0,
+    colorShiftG_1,
+    colorShiftB_0,
+    colorShiftB_1,
+    colorShiftBrightness_0,
+    colorShiftBrightness_1,
+    colorShiftContrast_0,
+    colorShiftContrast_1,
+    translateX_0,
+    translateX_1,
+    translateY_0,
+    translateY_1,
+    feedbackWindowSize_0,
+    feedbackWindowSize_1,
+    feedbackOpacity_0,
+    feedbackOpacity_1,
+    feedbackInvert_0,
+    feedbackInvert_1,
+    feedbackRotation_0,
+    feedbackRotation_1,
     videos,
     visualizerPage,
   } from "./sharedStore";
@@ -99,28 +110,28 @@
         capture.width,
         capture.height,
       );
-      p5.tint(255, $feedbackOpacity);
-      p5.rotate($feedbackRotation);
+      p5.tint(255, $feedbackOpacity_0);
+      p5.rotate($feedbackRotation_0);
       p5.push();
       p5.pop();
       p5.image(
         prevFrame,
-        (-capture.width * $feedbackWindowSize) / 2 + $translateX,
-        (-capture.height * $feedbackWindowSize) / 2 + $translateY,
-        capture.width * $feedbackWindowSize,
-        capture.height * $feedbackWindowSize,
+        (-capture.width * $feedbackWindowSize_0) / 2 + $translateX_0,
+        (-capture.height * $feedbackWindowSize_0) / 2 + $translateY_0,
+        capture.width * $feedbackWindowSize_0,
+        capture.height * $feedbackWindowSize_0,
       );
       p5.tint(255, 255);
 
-      if ($feedbackInvert == true) {
+      if ($feedbackInvert_0 == true) {
         p5.filter("invert");
       }
 
-      contrastMatrixFilter.setUniform("red", $colorShiftR);
-      contrastMatrixFilter.setUniform("green", $colorShiftG);
-      contrastMatrixFilter.setUniform("blue", $colorShiftB);
-      contrastMatrixFilter.setUniform("brightness", $colorShiftBrightness);
-      contrastMatrixFilter.setUniform("contrast", $colorShiftContrast);
+      contrastMatrixFilter.setUniform("red", $colorShiftR_0);
+      contrastMatrixFilter.setUniform("green", $colorShiftG_0);
+      contrastMatrixFilter.setUniform("blue", $colorShiftB_0);
+      contrastMatrixFilter.setUniform("brightness", $colorShiftBrightness_0);
+      contrastMatrixFilter.setUniform("contrast", $colorShiftContrast_0);
       p5.filter(contrastMatrixFilter);
 
       nextFrame.end();
@@ -134,7 +145,7 @@
         capture.height,
       );
       //This inverts the inversion, so only the feedback path is inverted
-      if ($feedbackInvert == true) {
+      if ($feedbackInvert_0 == true) {
         p5.filter("invert");
       }
     };
