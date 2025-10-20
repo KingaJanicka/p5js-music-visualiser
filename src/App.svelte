@@ -6,20 +6,31 @@
   import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
   import ToggleButton from "./components/toggleButton/toggleButton.svelte";
   import DropdownMenu from "./components/dropdownMenu/dropdownMenu.svelte";
+  import VisualizerControls from "./components/visualizerControls/visualizerControls.svelte";
   import { setContext } from "svelte";
-
-  setContext("p5Setup", { p5Setup });
-
+  import {
+    colorShiftR,
+    colorShiftG,
+    colorShiftB,
+    colorShiftBrightness,
+    colorShiftContrast,
+    translateX,
+    translateY,
+    feedbackWindowSize,
+    feedbackOpacity,
+    feedbackInvert,
+    feedbackRotation,
+    videos,
+  } from "./sharedStore";
   let frameRate: number = 60;
   let prevFrame, nextFrame;
-  let selectedVideoSource: string = $state("Camera");
+  let selectedVideoSource: string = $state("cat_pupils.webm");
   let menu: number = $state(0);
   let global_p5: p5;
-  let video_path = "cat_pupils.webm";
-  let videos = Object.keys(import.meta.glob("../public/*.webm")).map((d) =>
-    d.split("/").pop(),
-  );
-  videos.push("Camera");
+  // let videos = Object.keys(import.meta.glob("../public/*.webm")).map((d) =>
+  //   d.split("/").pop(),
+  // );
+  // videos.push("Camera");
 
   // P5js vars
   let capture: p5.Element;
@@ -29,32 +40,42 @@
   let contrastMatrixFilter: any;
   let video: p5.MediaElement;
 
-  //Declerations for colour page
-  let colorShiftRDefault: GLfloat = 0.5;
-  let colorShiftR: GLfloat = $state(colorShiftRDefault);
-  let colorShiftGDefault: GLfloat = 0.5;
-  let colorShiftG: GLfloat = $state(colorShiftGDefault);
-  let colorShiftBDefault: GLfloat = 0.5;
-  let colorShiftB: GLfloat = $state(colorShiftBDefault);
-  let colorShiftBrightnessDefault: GLfloat = 0;
-  let colorShiftBrightness: GLfloat = $state(colorShiftBrightnessDefault);
-  let colorShiftContrastDefault: GLfloat = -0.5;
-  let colorShiftContrast: GLfloat = $state(colorShiftContrastDefault);
+  // //Declerations for colour page
+  // let colorShiftRDefault: GLfloat = 0.5;
+  // let colorShiftR: GLfloat = $state(colorShiftRDefault);
 
-  //Declerations for Feedback page
-  let translateXDefault: number = 0;
-  let translateX: number = $state(translateXDefault);
-  let translateYDefault: number = 0;
-  let translateY: number = $state(translateYDefault);
-  let feedbackWindowSizeDefault: number = 1;
-  let feedbackWindowSize: number = $state(feedbackWindowSizeDefault);
-  let feedbackOpacityDefault: number = 127;
-  let feedbackOpacity: number = $state(feedbackOpacityDefault);
-  let feedbackInvertDefault: boolean = true;
-  let feedbackInvert: boolean = $state(feedbackInvertDefault);
-  let feedbackRotationDefault: number = 0;
-  let feedbackRotation: number = $state(feedbackRotationDefault);
+  // let colorShiftGDefault: GLfloat = 0.5;
+  // let colorShiftG: GLfloat = $state(colorShiftGDefault);
 
+  // let colorShiftBDefault: GLfloat = 0.5;
+  // let colorShiftB: GLfloat = $state(colorShiftBDefault);
+
+  // let colorShiftBrightnessDefault: GLfloat = 0;
+  // let colorShiftBrightness: GLfloat = $state(colorShiftBrightnessDefault);
+
+  // let colorShiftContrastDefault: GLfloat = -0.5;
+  // let colorShiftContrast: GLfloat = $state(colorShiftContrastDefault);
+
+  // //Declerations for Feedback page
+  // let translateXDefault: number = 0;
+  // let translateX: number = $state(translateXDefault);
+
+  // let translateYDefault: number = 0;
+  // let translateY: number = $state(translateYDefault);
+
+  // let feedbackWindowSizeDefault: number = 1;
+  // let feedbackWindowSize: number = $state(feedbackWindowSizeDefault);
+
+  // let feedbackOpacityDefault: number = 127;
+  // let feedbackOpacity: number = $state(feedbackOpacityDefault);
+
+  // let feedbackInvertDefault: boolean = true;
+  // let feedbackInvert: boolean = $state(feedbackInvertDefault);
+
+  // let feedbackRotationDefault: number = 0;
+  // let feedbackRotation: number = $state(feedbackRotationDefault);
+
+  setContext("p5Setup", { p5Setup });
   function p5Setup() {
     canvas = global_p5.createCanvas(640, 480, "webgl");
     let constraints = {
@@ -69,7 +90,7 @@
     };
 
     capture = global_p5.createCapture(constraints);
-    video = global_p5.createVideo(["/" + video_path]);
+    //video = global_p5.createVideo(["/" + video_path]);
     if (selectedVideoSource != "Camera") {
       videoSource = video = global_p5.createVideo(["/" + selectedVideoSource]);
     } else {
@@ -116,20 +137,20 @@
         capture.width,
         capture.height,
       );
-      p5.tint(255, feedbackOpacity);
-      p5.rotate(feedbackRotation);
+      p5.tint(255, $feedbackOpacity);
+      p5.rotate($feedbackRotation);
       p5.push();
       p5.pop();
       p5.image(
         prevFrame,
-        (-capture.width * feedbackWindowSize) / 2 + translateX,
-        (-capture.height * feedbackWindowSize) / 2 + translateY,
-        capture.width * feedbackWindowSize,
-        capture.height * feedbackWindowSize,
+        (-capture.width * $feedbackWindowSize) / 2 + $translateX,
+        (-capture.height * $feedbackWindowSize) / 2 + $translateY,
+        capture.width * $feedbackWindowSize,
+        capture.height * $feedbackWindowSize,
       );
       p5.tint(255, 255);
 
-      if (feedbackInvert == true) {
+      if ($feedbackInvert == true) {
         p5.filter("invert");
       }
 
@@ -151,7 +172,7 @@
         capture.height,
       );
       //This inverts the inversion, so only the feedback path is inverted
-      if (feedbackInvert == true) {
+      if ($feedbackInvert == true) {
         p5.filter("invert");
       }
     };
@@ -165,80 +186,7 @@
 <main>
   <P5 {sketch} />
   {#if menu === 0}
-    <div class="pageContainer">
-      <div class="colorControls">
-        <DropdownMenu
-          {videos}
-          bind:selectedItem={selectedVideoSource}
-          setupFunc={p5Setup()}
-        />
-        <VerticalSlider
-          bind:valueToBind={colorShiftBrightness}
-          default={colorShiftBrightnessDefault}
-          min="-2.5"
-          max="2.5">Brightness</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={colorShiftContrast}
-          default={colorShiftContrastDefault}
-          min="-2.5"
-          max="2.5">Contrast</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={colorShiftR}
-          default={colorShiftRDefault}
-          min="0"
-          max="1">Red</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={colorShiftG}
-          default={colorShiftGDefault}
-          min="0"
-          max="1">Green</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={colorShiftB}
-          default={colorShiftBDefault}
-          min="0"
-          max="1">Blue</VerticalSlider
-        >
-      </div>
-      <div class="feedbackControls">
-        <VerticalSlider
-          bind:valueToBind={translateX}
-          default={translateXDefault}
-          min="-100"
-          max="100">Translate X</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={translateY}
-          default={translateYDefault}
-          min="-100"
-          max="100">Translate Y</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={feedbackWindowSize}
-          default={feedbackWindowSizeDefault}
-          min="0"
-          max="2">Feedback Size</VerticalSlider
-        >
-        <VerticalSlider
-          bind:valueToBind={feedbackOpacity}
-          default={feedbackOpacityDefault}
-          min="0"
-          max="255">Feedback Opacity</VerticalSlider
-        >
-        <ToggleButton bind:valueToBind={feedbackInvert}
-          >Invert Feedback</ToggleButton
-        >
-        <VerticalSlider
-          bind:valueToBind={feedbackRotation}
-          default={feedbackRotationDefault}
-          min="-3.14"
-          max="3.14">Feedback Skew</VerticalSlider
-        >
-      </div>
-    </div>
+    <VisualizerControls />
   {:else if menu === 1}
     <div>Video mixer goes here</div>
   {:else if menu === 2}
@@ -254,13 +202,4 @@
 </main>
 
 <style>
-  .colorControls {
-    display: flex;
-    justify-content: center;
-  }
-
-  .feedbackControls {
-    display: flex;
-    justify-content: center;
-  }
 </style>
