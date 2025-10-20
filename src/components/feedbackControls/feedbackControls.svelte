@@ -15,6 +15,7 @@
         feedbackInvert,
         feedbackRotation,
         feedbackRotationDefault,
+        visualizerPage,
     } from "../../sharedStore";
 </script>
 

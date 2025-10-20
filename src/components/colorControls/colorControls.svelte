@@ -16,6 +16,7 @@
         colorShiftContrastDefault,
         videos,
         selectedVideoSource,
+        visualizerPage,
     } from "../../sharedStore";
 </script>
 

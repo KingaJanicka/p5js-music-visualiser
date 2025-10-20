@@ -18,13 +18,14 @@
     feedbackInvert,
     feedbackRotation,
     videos,
+    visualizerPage,
   } from "./sharedStore";
+  import VisualizerPageSelector from "./components/visualizerPageSelector/visualizerPageSelector.svelte";
   let frameRate: number = 60;
   let prevFrame: p5.Framebuffer;
   let nextFrame: p5.Framebuffer;
   let video_path = "cat_pupils.webm";
   let selectedVideoSource: string = $state("cat_pupils.webm");
-  let menu: number = $state(0);
   let global_p5: p5;
   // P5js vars
   let capture: p5.Element;
@@ -146,20 +147,18 @@
 
 <main>
   <P5 {sketch} />
-  {#if menu === 0}
-    <VisualizerControls />
-  {:else if menu === 1}
+  {#if $visualizerPage === 0}
+    <VisualizerControls visualizer={0} />
+  {:else if $visualizerPage === 1}
     <div>Video mixer goes here</div>
-  {:else if menu === 2}
-    <div>Visualizer 2 goes here</div>
+  {:else if $visualizerPage === 2}
+    <div>
+      <VisualizerControls />
+    </div>
   {:else}
     <h1>You shouldn't be here, move along</h1>
   {/if}
-  <ul id="menu">
-    <button onclick={() => (menu = 0)}>Visualizer 1</button>
-    <button onclick={() => (menu = 1)}>Video Mixer</button>
-    <button onclick={() => (menu = 2)}>Visualizer 2</button>
-  </ul>
+  <VisualizerPageSelector />
 </main>
 
 <style>
