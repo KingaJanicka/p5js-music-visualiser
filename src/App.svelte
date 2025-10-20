@@ -3,9 +3,6 @@
   import type p5 from "p5";
   import exposure from "./exposure.frag";
   import contrastMatrix from "./contrastMatrixCustom.frag";
-  import VerticalSlider from "./components/verticalSlider/verticalSlider.svelte";
-  import ToggleButton from "./components/toggleButton/toggleButton.svelte";
-  import DropdownMenu from "./components/dropdownMenu/dropdownMenu.svelte";
   import VisualizerControls from "./components/visualizerControls/visualizerControls.svelte";
   import { setContext } from "svelte";
   import {
@@ -29,11 +26,6 @@
   let selectedVideoSource: string = $state("cat_pupils.webm");
   let menu: number = $state(0);
   let global_p5: p5;
-  // let videos = Object.keys(import.meta.glob("../public/*.webm")).map((d) =>
-  //   d.split("/").pop(),
-  // );
-  // videos.push("Camera");
-
   // P5js vars
   let capture: p5.Element;
   let canvas: p5.Renderer;
@@ -41,41 +33,6 @@
   let videoSource: p5.Element;
   let contrastMatrixFilter: any;
   let video: p5.MediaElement;
-
-  // //Declerations for colour page
-  // let colorShiftRDefault: GLfloat = 0.5;
-  // let colorShiftR: GLfloat = $state(colorShiftRDefault);
-
-  // let colorShiftGDefault: GLfloat = 0.5;
-  // let colorShiftG: GLfloat = $state(colorShiftGDefault);
-
-  // let colorShiftBDefault: GLfloat = 0.5;
-  // let colorShiftB: GLfloat = $state(colorShiftBDefault);
-
-  // let colorShiftBrightnessDefault: GLfloat = 0;
-  // let colorShiftBrightness: GLfloat = $state(colorShiftBrightnessDefault);
-
-  // let colorShiftContrastDefault: GLfloat = -0.5;
-  // let colorShiftContrast: GLfloat = $state(colorShiftContrastDefault);
-
-  // //Declerations for Feedback page
-  // let translateXDefault: number = 0;
-  // let translateX: number = $state(translateXDefault);
-
-  // let translateYDefault: number = 0;
-  // let translateY: number = $state(translateYDefault);
-
-  // let feedbackWindowSizeDefault: number = 1;
-  // let feedbackWindowSize: number = $state(feedbackWindowSizeDefault);
-
-  // let feedbackOpacityDefault: number = 127;
-  // let feedbackOpacity: number = $state(feedbackOpacityDefault);
-
-  // let feedbackInvertDefault: boolean = true;
-  // let feedbackInvert: boolean = $state(feedbackInvertDefault);
-
-  // let feedbackRotationDefault: number = 0;
-  // let feedbackRotation: number = $state(feedbackRotationDefault);
 
   setContext("p5Setup", { p5Setup });
   function p5Setup(item = null) {
