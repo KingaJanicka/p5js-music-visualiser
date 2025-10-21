@@ -17,7 +17,7 @@
         bind:value={input_value}
         min={props.min}
         max={props.max}
-        onclick={() => ($visualizerCrossfade = input_value)}
+        oninput={() => ($visualizerCrossfade = input_value)}
         ondblclick={() => ($visualizerCrossfade = visualizerCrossfadeDefault)}
     />
 </div>
