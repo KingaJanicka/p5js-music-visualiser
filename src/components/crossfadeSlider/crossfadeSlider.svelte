@@ -8,6 +8,7 @@
     let input_value = $state(visualizerCrossfadeDefault);
 </script>
 
+<!-- TODO: this will not reset to default value visually, but does reset the actual val -->
 <div>
     <p>{$visualizerCrossfade}</p>
     <input
@@ -17,7 +18,7 @@
         min={props.min}
         max={props.max}
         onclick={() => ($visualizerCrossfade = input_value)}
-        ondblclick={() => ($visualizerCrossfade = props.default)}
+        ondblclick={() => ($visualizerCrossfade = visualizerCrossfadeDefault)}
     />
 </div>
 

@@ -43,8 +43,8 @@
             <VerticalSlider
                 bind:valueToBind={$feedbackWindowSize_0}
                 default={feedbackWindowSizeDefault}
-                min="0"
-                max="2">Feedback Size</VerticalSlider
+                min="0.5"
+                max="1.5">Feedback Size</VerticalSlider
             >
             <VerticalSlider
                 bind:valueToBind={$feedbackOpacity_0}
@@ -79,8 +79,8 @@
             <VerticalSlider
                 bind:valueToBind={$feedbackWindowSize_1}
                 default={feedbackWindowSizeDefault}
-                min="0"
-                max="2">Feedback Size</VerticalSlider
+                min="0.5"
+                max="1.5">Feedback Size</VerticalSlider
             >
             <VerticalSlider
                 bind:valueToBind={$feedbackOpacity_1}

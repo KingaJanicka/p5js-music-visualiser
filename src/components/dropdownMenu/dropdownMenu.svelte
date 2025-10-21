@@ -2,7 +2,7 @@
     // let props = $props();
     import { getContext } from "svelte";
     const { p5Setup } = getContext("p5Setup");
-
+    import { visualizerPage } from "../../sharedStore";
     // import { selectedVideoSource } from "../../sharedStore";
 
     let isMenuOn: boolean = $state(false);

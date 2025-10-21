@@ -32,27 +32,39 @@
     videos,
     visualizerPage,
     visualizerCrossfade,
+    selectedVideoSource_0,
+    selectedVideoSource_1,
   } from "./sharedStore";
   import VisualizerPageSelector from "./components/visualizerPageSelector/visualizerPageSelector.svelte";
   let frameRate: number = 60;
-  let prevFrame: p5.Framebuffer;
-  let nextFrame: p5.Framebuffer;
-  let video_path = "cat_pupils.webm";
-  let selectedVideoSource: string = $state("cat_pupils.webm");
+  let prevFrame_0: p5.Framebuffer;
+  let prevFrame_1: p5.Framebuffer;
+  let nextFrame_0: p5.Framebuffer;
+  let nextFrame_1: p5.Framebuffer;
+  let combinedFrame: p5.Framebuffer;
+  let video_path_0 = "cat_pupils.webm";
+  let video_path_1 = "cat_pupils.webm";
   let global_p5: p5;
   // P5js vars
   let capture: p5.Element;
   let canvas: p5.Renderer;
   let exposureFilter: any;
-  let videoSource: p5.Element;
+  let videoSource_0: p5.Element;
+  let videoSource_1: p5.Element;
   let contrastMatrixFilter: any;
-  let video: p5.MediaElement;
+  let video_0: p5.MediaElement;
+  let video_1: p5.MediaElement;
 
   setContext("p5Setup", { p5Setup });
   function p5Setup(item = null) {
     if (item != null) {
-      selectedVideoSource = item;
+      if ($visualizerPage === 0) {
+        $selectedVideoSource_0 = item;
+      } else if ($visualizerPage === 2) {
+        $selectedVideoSource_1 = item;
+      }
     }
+    //Global, for both framebuffers
     canvas = global_p5.createCanvas(640, 480, "webgl");
     let constraints = {
       video: {
@@ -65,21 +77,40 @@
       audio: false,
     };
     capture = global_p5.createCapture(constraints);
-    video = global_p5.createVideo(["/" + video_path]);
-    if (selectedVideoSource != "Camera") {
-      videoSource = video = global_p5.createVideo(["/" + selectedVideoSource]);
+
+    //For visualizer nr1
+    video_0 = global_p5.createVideo(["/" + video_path_0]);
+    console.log($selectedVideoSource_0);
+    if ($selectedVideoSource_0 != "Camera") {
+      videoSource_0 = video_0 = global_p5.createVideo([
+        "/" + $selectedVideoSource_0,
+      ]);
     } else {
-      videoSource = global_p5.createCapture(constraints);
+      videoSource_0 = global_p5.createCapture(constraints);
+    }
+
+    //For visualizer nr2
+    video_1 = global_p5.createVideo(["/" + video_path_1]);
+    console.log($selectedVideoSource_1);
+    if ($selectedVideoSource_1 != "Camera") {
+      videoSource_1 = video_1 = global_p5.createVideo([
+        "/" + $selectedVideoSource_1,
+      ]);
+    } else {
+      videoSource_1 = global_p5.createCapture(constraints);
     }
 
     /* @ts-expect-error shrug */
     exposureFilter = global_p5.createFilterShader(exposure);
     /* @ts-expect-error shrug */
     contrastMatrixFilter = global_p5.createFilterShader(contrastMatrix);
-    prevFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
-    nextFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
+    prevFrame_0 = global_p5.createFramebuffer({ format: global_p5.FLOAT });
+    prevFrame_1 = global_p5.createFramebuffer({ format: global_p5.FLOAT });
+    nextFrame_0 = global_p5.createFramebuffer({ format: global_p5.FLOAT });
+    nextFrame_1 = global_p5.createFramebuffer({ format: global_p5.FLOAT });
+    combinedFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
 
-    video.loop();
+    video_0.loop();
   }
 
   const sketch: Sketch = (p5) => {
@@ -91,22 +122,22 @@
 
     p5.draw = () => {
       //This is for Visualiser 1
-      let prevNew;
-      let nextNew;
+      let prevNew_0;
+      let nextNew_0;
       // Feedback loop,
       // drawing the usual frame to the buffer
-      prevNew = nextFrame;
-      nextNew = prevFrame;
-      nextFrame = nextNew;
-      prevFrame = prevNew;
+      prevNew_0 = nextFrame_0;
+      nextNew_0 = prevFrame_0;
+      nextFrame_0 = nextNew_0;
+      prevFrame_0 = prevNew_0;
 
-      nextFrame.begin();
+      nextFrame_0.begin();
       p5.clear();
       p5.push();
 
       p5.tint(255, 255);
       p5.image(
-        videoSource,
+        videoSource_0,
         -capture.width / 2,
         -capture.height / 2,
         capture.width,
@@ -117,7 +148,7 @@
       p5.push();
       p5.pop();
       p5.image(
-        prevFrame,
+        prevFrame_0,
         (-capture.width * $feedbackWindowSize_0) / 2 + $translateX_0,
         (-capture.height * $feedbackWindowSize_0) / 2 + $translateY_0,
         capture.width * $feedbackWindowSize_0,
@@ -136,16 +167,88 @@
       contrastMatrixFilter.setUniform("contrast", $colorShiftContrast_0);
       p5.filter(contrastMatrixFilter);
 
-      nextFrame.end();
-      // This actually draws the frame
-      // from the buffer to the canvas
+      nextFrame_0.end();
+
+      //This if for framebuffer 2
+
+      let prevNew_1;
+      let nextNew_1;
+      // Feedback loop,
+      // drawing the usual frame to the buffer
+      prevNew_1 = nextFrame_1;
+      nextNew_1 = prevFrame_1;
+      nextFrame_1 = nextNew_1;
+      prevFrame_1 = prevNew_1;
+
+      nextFrame_1.begin();
+      p5.clear();
+      p5.push();
+
+      p5.tint(255, 255);
       p5.image(
-        nextFrame,
+        videoSource_1,
         -capture.width / 2,
         -capture.height / 2,
         capture.width,
         capture.height,
       );
+      p5.tint(255, $feedbackOpacity_1);
+      p5.rotate($feedbackRotation_1);
+      p5.push();
+      p5.pop();
+      p5.image(
+        prevFrame_1,
+        (-capture.width * $feedbackWindowSize_1) / 2 + $translateX_1,
+        (-capture.height * $feedbackWindowSize_1) / 2 + $translateY_1,
+        capture.width * $feedbackWindowSize_1,
+        capture.height * $feedbackWindowSize_1,
+      );
+      p5.tint(255, 255);
+
+      if ($feedbackInvert_1 == true) {
+        p5.filter("invert");
+      }
+
+      contrastMatrixFilter.setUniform("red", $colorShiftR_1);
+      contrastMatrixFilter.setUniform("green", $colorShiftG_1);
+      contrastMatrixFilter.setUniform("blue", $colorShiftB_1);
+      contrastMatrixFilter.setUniform("brightness", $colorShiftBrightness_1);
+      contrastMatrixFilter.setUniform("contrast", $colorShiftContrast_1);
+      p5.filter(contrastMatrixFilter);
+
+      nextFrame_1.end();
+
+      // This bit combines two frames
+      combinedFrame.begin();
+      p5.tint(255, 255);
+      p5.tint(255, $visualizerCrossfade);
+      p5.image(
+        nextFrame_0,
+        -capture.width / 2,
+        -capture.height / 2,
+        capture.width,
+        capture.height,
+      );
+      //Not sure if this tint is working, might need both frame buffers to check
+      p5.tint(255, 255);
+      p5.tint(255, 255 - $visualizerCrossfade);
+      p5.image(
+        nextFrame_1,
+        -capture.width / 2,
+        -capture.height / 2,
+        capture.width,
+        capture.height,
+      );
+      combinedFrame.end();
+      p5.tint(255, 255);
+      p5.image(
+        combinedFrame,
+        -capture.width / 2,
+        -capture.height / 2,
+        capture.width,
+        capture.height,
+      );
+      // p5.tint(255);s
       //This inverts the inversion, so only the feedback path is inverted
       if ($feedbackInvert_0 == true) {
         p5.filter("invert");
@@ -165,9 +268,7 @@
   {:else if $visualizerPage === 1}
     <VideoMixerControls />
   {:else if $visualizerPage === 2}
-    <div>
-      <VisualizerControls />
-    </div>
+    <VisualizerControls />
   {:else}
     <h1>You shouldn't be here, move along</h1>
   {/if}
