@@ -1,5 +1,3 @@
 TODO:
-dropdown does not work like it should
-Xfade slider does not reset with doubletap
-add another frame buffer that will draw onto the canvas
-we can xfade with simple tint command
+Feedback invert is iffy
+need to add small previews
