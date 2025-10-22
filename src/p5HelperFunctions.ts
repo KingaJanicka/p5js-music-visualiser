@@ -1,63 +1,4 @@
-<script lang="ts">
-  import P5, { type Sketch } from "p5-svelte";
-  import type p5 from "p5";
-  import exposure from "./exposure.frag";
-  import contrastMatrix from "./contrastMatrixCustom.frag";
-  import VisualizerControls from "./components/visualizerControls/visualizerControls.svelte";
-  import VideoMixerControls from "./components/videoMixerControls/videoMixerControls.svelte";
-  import { setContext } from "svelte";
-  import {
-    colorShiftR_0,
-    colorShiftR_1,
-    colorShiftG_0,
-    colorShiftG_1,
-    colorShiftB_0,
-    colorShiftB_1,
-    colorShiftBrightness_0,
-    colorShiftBrightness_1,
-    colorShiftContrast_0,
-    colorShiftContrast_1,
-    translateX_0,
-    translateX_1,
-    translateY_0,
-    translateY_1,
-    feedbackWindowSize_0,
-    feedbackWindowSize_1,
-    feedbackOpacity_0,
-    feedbackOpacity_1,
-    feedbackInvert_0,
-    feedbackInvert_1,
-    feedbackRotation_0,
-    feedbackRotation_1,
-    videos,
-    visualizerPage,
-    visualizerCrossfade,
-    selectedVideoSource_0,
-    selectedVideoSource_1,
-  } from "./sharedStore";
-  import VisualizerPageSelector from "./components/visualizerPageSelector/visualizerPageSelector.svelte";
-  import VisualizerPreview from "./components/visualizerPreview/visualizerPreview.svelte";
-  let frameRate: number = 60;
-  let prevFrame_0: p5.Framebuffer;
-  let prevFrame_1: p5.Framebuffer;
-  let nextFrame_0: p5.Framebuffer;
-  let nextFrame_1: p5.Framebuffer;
-  let combinedFrame: p5.Framebuffer;
-  let video_path_0 = "cat_pupils.webm";
-  let video_path_1 = "cat_pupils.webm";
-  let global_p5: p5;
-  // P5js vars
-  let capture: p5.Element;
-  let canvas: p5.Renderer;
-  let exposureFilter: any;
-  let videoSource_0: p5.Element;
-  let videoSource_1: p5.Element;
-  let contrastMatrixFilter: any;
-  let video_0: p5.MediaElement;
-  let video_1: p5.MediaElement;
-
-  setContext("p5Setup", { p5Setup });
-  function p5Setup(item = null) {
+  export function p5Setup(item = null) {
     if (item != null) {
       if ($visualizerPage === 0) {
         $selectedVideoSource_0 = item;
@@ -112,7 +53,7 @@
     combinedFrame = global_p5.createFramebuffer({ format: global_p5.FLOAT });
   }
 
-  function draw_framebuffer_0(p5) {
+  export function draw_framebuffer_0(p5) {
     //This is for Visualiser 1
     let prevNew_0;
     let nextNew_0;
@@ -168,7 +109,7 @@
     // }
   }
 
-  function draw_framebuffer_1(p5) {
+  export function draw_framebuffer_1(p5) {
     let prevNew_1;
     let nextNew_1;
     // Feedback loop,
@@ -223,7 +164,7 @@
     // }
   }
 
-  function combine_framebuffers(p5) {
+  export function combine_framebuffers(p5) {
     combinedFrame.begin();
     p5.tint(255, 255);
     p5.tint(255, $visualizerCrossfade);
@@ -248,7 +189,7 @@
     );
     combinedFrame.end();
   }
-  function draw_image(p5) {
+  export function draw_image(p5) {
     p5.tint(255, 255);
     p5.image(
       combinedFrame,
@@ -260,39 +201,3 @@
     // p5.tint(255);s
     //This inverts the inversion, so only the feedback path is inverted
   }
-  const sketch: Sketch = (p5) => {
-    global_p5 = p5;
-
-    p5.setup = () => {
-      p5Setup();
-    };
-
-    p5.draw = () => {
-      draw_framebuffer_0(p5);
-      draw_framebuffer_1(p5);
-      combine_framebuffers(p5);
-      draw_image(p5);
-    };
-  };
-</script>
-
-<svelte:head>
-  <script src="https://lygia.xyz/resolve.js"></script>
-</svelte:head>
-
-<main>
-  <P5 {sketch} />
-  {#if $visualizerPage === 0}
-    <VisualizerControls />
-  {:else if $visualizerPage === 1}
-    <VideoMixerControls />
-  {:else if $visualizerPage === 2}
-    <VisualizerControls />
-  {:else}
-    <h1>You shouldn't be here, move along</h1>
-  {/if}
-  <VisualizerPageSelector />
-</main>
-
-<style>
-</style>
