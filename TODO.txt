@@ -1,2 +1,6 @@
 TODO:
-need to add small previews
+
+make tint work with the background colour value instead of alpha to avoid artefacts
+
+make video mixer page not jump everything up, either more values or that slider needs to be way bigger
+maybe we could put previews there?

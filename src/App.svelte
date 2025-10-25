@@ -291,7 +291,7 @@
   {:else}
     <h1>You shouldn't be here, move along</h1>
   {/if}
-  <VisualizerPageSelector />
+  <VisualizerPageSelector frame_0={nextFrame_0} />
 </main>
 
 <style>

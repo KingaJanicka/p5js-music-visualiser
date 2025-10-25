@@ -1,6 +1,7 @@
 <script>
     import { visualizerPage } from "../../sharedStore";
     import VisualizerPreview from "../visualizerPreview/visualizerPreview.svelte";
+    let props = $props();
 </script>
 
 <div>
@@ -11,7 +12,7 @@
                 class={$visualizerPage === 0 ? "selected" : ""}
                 >Visualizer 1</button
             >
-            <VisualizerPreview />
+            <!-- <VisualizerPreview frame_0={props.frame_0} /> -->
         </div>
         <div class="buttonContainer">
             <button
@@ -26,7 +27,7 @@
                 class={$visualizerPage === 2 ? "selected" : ""}
                 >Visualizer 2</button
             >
-            <VisualizerPreview />
+            <!-- <VisualizerPreview frame_0={props.frame_0} /> -->
         </div>
     </div>
 </div>
