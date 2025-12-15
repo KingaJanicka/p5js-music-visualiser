@@ -20,8 +20,8 @@
         </div>
         <div class="buttonContainer">
             <button
-                onclick={() => ($visualizerPage = 2)}
-                class={$visualizerPage === 2 ? "selected" : ""}
+                onclick={() => ($visualizerPage = 1)}
+                class={$visualizerPage === 1 ? "selected" : ""}
                 >Visualizer 2</button
             >
             <!-- <VisualizerPreview frame_0={props.frame_0} /> -->

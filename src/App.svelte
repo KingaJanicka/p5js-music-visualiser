@@ -288,8 +288,6 @@
   {#if $visualizerPage === 0}
     <VisualizerControls />
   {:else if $visualizerPage === 1}
-    <VideoMixerControls />
-  {:else if $visualizerPage === 2}
     <VisualizerControls />
   {:else}
     <h1>You shouldn't be here, move along</h1>
