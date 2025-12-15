@@ -24,7 +24,7 @@
 
 <style>
     input {
-        writing-mode: horizontal-tb;
+        writing-mode: vertical-lr;
         direction: rtl;
         padding: 0em 5em;
     }

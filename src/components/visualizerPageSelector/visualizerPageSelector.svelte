@@ -1,6 +1,7 @@
 <script>
     import { visualizerPage } from "../../sharedStore";
     import VisualizerPreview from "../visualizerPreview/visualizerPreview.svelte";
+    import VideoMixerControls from "../videoMixerControls/videoMixerControls.svelte";
     let props = $props();
 </script>
 
@@ -15,11 +16,7 @@
             <!-- <VisualizerPreview frame_0={props.frame_0} /> -->
         </div>
         <div class="buttonContainer">
-            <button
-                onclick={() => ($visualizerPage = 1)}
-                class={$visualizerPage === 1 ? "selected" : ""}
-                >Video Mixer</button
-            >
+            <VideoMixerControls />
         </div>
         <div class="buttonContainer">
             <button
@@ -48,10 +45,11 @@
     }
     .menu {
         display: flex;
+        flex-direction: column;
         justify-content: center;
     }
     .buttonContainer {
-        height: 18em;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;

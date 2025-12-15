@@ -280,8 +280,11 @@
   <script src="https://lygia.xyz/resolve.js"></script>
 </svelte:head>
 
-<main>
-  <P5 {sketch} />
+<main class="mainContainer">
+  <div class="topContainer">
+    <P5 {sketch} />
+    <VisualizerPageSelector frame_0={nextFrame_0} />
+  </div>
   {#if $visualizerPage === 0}
     <VisualizerControls />
   {:else if $visualizerPage === 1}
@@ -291,8 +294,15 @@
   {:else}
     <h1>You shouldn't be here, move along</h1>
   {/if}
-  <VisualizerPageSelector frame_0={nextFrame_0} />
 </main>
 
 <style>
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .topContainer {
+    display: flex;
+    flex-direction: row;
+  }
 </style>
