@@ -1,7 +1,7 @@
 <script lang="ts">
     // let props = $props();
     let { valueToBind = $bindable(0), ...props } = $props();
-    import VerticalSlider from "../verticalSlider/verticalSlider.svelte";
+    import HorizontalSlider from "../HorizontalSlider/HorizontalSlider.svelte";
     import DropdownMenu from "../dropdownMenu/dropdownMenu.svelte";
     import ToggleButton from "../toggleButton/toggleButton.svelte";
     import ButtonState from "../buttonState/buttonState.svelte";
@@ -56,12 +56,12 @@
                 <ButtonState idx="3" label="R" />
                 <ButtonState idx="4" label="G" />
                 <ButtonState idx="5" label="B" />
-                <ButtonState idx="6" label="Fdbk X" />
-                <ButtonState idx="7" label="Fdbk Y" />
-                <ButtonState idx="8" label="Fdbk. Size" />
-                <ButtonState idx="9" label="Fcbk Op." />
-                <ButtonState idx="10" label="Fdbk Inv" />
-                <ButtonState idx="11" label="Fdbk Skew" />
+                <ButtonState idx="6" label="F. X" />
+                <ButtonState idx="7" label="F. Y" />
+                <ButtonState idx="8" label="F. Size" />
+                <ButtonState idx="9" label="F. Opacity" />
+                <ButtonState idx="10" label="F. Inv" />
+                <ButtonState idx="11" label="F. Skew" />
             </div>
             <div class="controlContainer">
                 {#if $selectedControl === 0}
@@ -71,73 +71,73 @@
                     />
                 {/if}
                 {#if $selectedControl === 1}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$colorShiftBrightness_0}
                         default={colorShiftBrightnessDefault}
                         min="-2.5"
-                        max="2.5">Brightness</VerticalSlider
+                        max="2.5">Brightness</HorizontalSlider
                     >
                 {/if}
                 {#if $selectedControl === 2}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$colorShiftContrast_0}
                         default={colorShiftContrastDefault}
                         min="-2.5"
-                        max="2.5">Contrast</VerticalSlider
+                        max="2.5">Contrast</HorizontalSlider
                     >
                 {/if}
                 {#if $selectedControl === 3}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$colorShiftR_0}
                         default={colorShiftRDefault}
                         min="0"
-                        max="1">Red</VerticalSlider
+                        max="1">Red</HorizontalSlider
                     >
                 {/if}
                 {#if $selectedControl === 4}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$colorShiftG_0}
                         default={colorShiftGDefault}
                         min="0"
-                        max="1">Green</VerticalSlider
+                        max="1">Green</HorizontalSlider
                     >
                 {/if}
                 {#if $selectedControl === 5}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$colorShiftB_0}
                         default={colorShiftBDefault}
                         min="0"
-                        max="1">Blue</VerticalSlider
+                        max="1">Blue</HorizontalSlider
                     >{/if}
 
                 {#if $selectedControl === 6}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$translateX_0}
                         default={translateXDefault}
                         min="-100"
-                        max="100">Translate X</VerticalSlider
+                        max="100">Translate X</HorizontalSlider
                     >{/if}
                 {#if $selectedControl === 7}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$translateY_0}
                         default={translateYDefault}
                         min="-100"
-                        max="100">Translate Y</VerticalSlider
+                        max="100">Translate Y</HorizontalSlider
                     >
                 {/if}
                 {#if $selectedControl === 8}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$feedbackWindowSize_0}
                         default={feedbackWindowSizeDefault}
                         min="0.5"
-                        max="1.5">Feedback Size</VerticalSlider
+                        max="1.5">Feedback Size</HorizontalSlider
                     >{/if}
                 {#if $selectedControl === 9}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$feedbackOpacity_0}
                         default={feedbackOpacityDefault}
                         min="0"
-                        max="255">Feedback Opacity</VerticalSlider
+                        max="255">Feedback Opacity</HorizontalSlider
                     >{/if}
 
                 {#if $selectedControl === 10}
@@ -146,11 +146,11 @@
                     >
                 {/if}
                 {#if $selectedControl === 11}
-                    <VerticalSlider
+                    <HorizontalSlider
                         bind:valueToBind={$feedbackRotation_0}
                         default={feedbackRotationDefault}
                         min="-3.14"
-                        max="3.14">Feedback Skew</VerticalSlider
+                        max="3.14">Feedback Skew</HorizontalSlider
                     >
                 {/if}
             </div>
@@ -158,67 +158,67 @@
     {:else}
         <div class="visualizerControls">
             <DropdownMenu {videos} bind:selectedItem={$selectedVideoSource_1} />
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$colorShiftBrightness_1}
                 default={colorShiftBrightnessDefault}
                 min="-2.5"
-                max="2.5">Brightness</VerticalSlider
+                max="2.5">Brightness</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$colorShiftContrast_1}
                 default={colorShiftContrastDefault}
                 min="-2.5"
-                max="2.5">Contrast</VerticalSlider
+                max="2.5">Contrast</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$colorShiftR_1}
                 default={colorShiftRDefault}
                 min="0"
-                max="1">Red</VerticalSlider
+                max="1">Red</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$colorShiftG_1}
                 default={colorShiftGDefault}
                 min="0"
-                max="1">Green</VerticalSlider
+                max="1">Green</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$colorShiftB_1}
                 default={colorShiftBDefault}
                 min="0"
-                max="1">Blue</VerticalSlider
-            ><VerticalSlider
+                max="1">Blue</HorizontalSlider
+            ><HorizontalSlider
                 bind:valueToBind={$translateX_1}
                 default={translateXDefault}
                 min="-100"
-                max="100">Translate X</VerticalSlider
+                max="100">Translate X</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$translateY_1}
                 default={translateYDefault}
                 min="-100"
-                max="100">Translate Y</VerticalSlider
+                max="100">Translate Y</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$feedbackWindowSize_1}
                 default={feedbackWindowSizeDefault}
                 min="0.5"
-                max="1.5">Feedback Size</VerticalSlider
+                max="1.5">Feedback Size</HorizontalSlider
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$feedbackOpacity_1}
                 default={feedbackOpacityDefault}
                 min="0"
-                max="255">Feedback Opacity</VerticalSlider
+                max="255">Feedback Opacity</HorizontalSlider
             >
             <ToggleButton bind:valueToBind={$feedbackInvert_1}
                 >Invert Feedback</ToggleButton
             >
-            <VerticalSlider
+            <HorizontalSlider
                 bind:valueToBind={$feedbackRotation_1}
                 default={feedbackRotationDefault}
                 min="-3.14"
-                max="3.14">Feedback Skew</VerticalSlider
+                max="3.14">Feedback Skew</HorizontalSlider
             >
         </div>
     {/if}

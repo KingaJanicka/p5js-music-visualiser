@@ -4,7 +4,7 @@
 </script>
 
 <div>
-    <p>{@render props.children()}, {valueToBind}</p>
+    <p>{@render props.children()}</p>
     <input
         type="range"
         step="0.01"
@@ -17,8 +17,8 @@
 
 <style>
     input {
-        writing-mode: vertical-lr;
-        direction: rtl;
-        padding: 0em 5em;
+        writing-mode: horizontal-tb;
+        direction: ltr;
+        padding: 0em 20em;
     }
 </style>

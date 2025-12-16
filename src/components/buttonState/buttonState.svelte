@@ -8,7 +8,7 @@
     <button
         onclick={() => ($selectedControl = parseInt(props.idx))}
         class={$selectedControl === props.idx ? "selected" : "not"}
-        >{props.label}, {$selectedControl}</button
+        >{props.label}</button
     >
 </main>
 
