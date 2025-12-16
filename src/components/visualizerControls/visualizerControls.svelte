@@ -1,7 +1,8 @@
 <script lang="ts">
     // let props = $props();
     let { valueToBind = $bindable(0), ...props } = $props();
-    import HorizontalSlider from "../HorizontalSlider/HorizontalSlider.svelte";
+    // @ts-ignore
+    import HorizontalSlider from "../horizontalSlider/horizontalSlider.svelte";
     import DropdownMenu from "../dropdownMenu/dropdownMenu.svelte";
     import ToggleButton from "../toggleButton/toggleButton.svelte";
     import ButtonState from "../buttonState/buttonState.svelte";
