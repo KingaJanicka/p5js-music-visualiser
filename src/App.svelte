@@ -70,14 +70,14 @@
     let constraints = {
       video: {
         mandatory: {
-          innerWidth: canvas.width,
-          innerHeight: canvas.height,
+          minWidth: canvas.width,
+          minHeight: canvas.height,
         },
         optional: [{ maxFrameRate: frameRate }],
       },
       audio: false,
     };
-    capture = global_p5.createCapture(constraints);
+    // capture = global_p5.createCapture(constraints);
 
     //For visualizer nr1
     if ($selectedVideoSource_0 != "Camera") {
@@ -130,10 +130,10 @@
     p5.tint(255, 255);
     p5.image(
       videoSource_0,
-      -capture.width / 2,
-      -capture.height / 2,
-      capture.width,
-      capture.height,
+      -canvas.width / 2,
+      -canvas.height / 2,
+      canvas.width,
+      canvas.height,
     );
     if ($feedbackInvert_0 == true) {
       p5.filter("invert");
@@ -144,10 +144,10 @@
     p5.pop();
     p5.image(
       prevFrame_0,
-      (-capture.width * $feedbackWindowSize_0) / 2 + $translateX_0,
-      (-capture.height * $feedbackWindowSize_0) / 2 + $translateY_0,
-      capture.width * $feedbackWindowSize_0,
-      capture.height * $feedbackWindowSize_0,
+      (-canvas.width * $feedbackWindowSize_0) / 2 + $translateX_0,
+      (-canvas.height * $feedbackWindowSize_0) / 2 + $translateY_0,
+      canvas.width * $feedbackWindowSize_0,
+      canvas.height * $feedbackWindowSize_0,
     );
     p5.tint(255, 255);
 
@@ -186,10 +186,10 @@
 
     p5.image(
       videoSource_1,
-      -capture.width / 2,
-      -capture.height / 2,
-      capture.width,
-      capture.height,
+      -canvas.width / 2,
+      -canvas.height / 2,
+      canvas.width,
+      canvas.height,
     );
     if ($feedbackInvert_1 == true) {
       p5.filter("invert");
@@ -200,10 +200,10 @@
     p5.pop();
     p5.image(
       prevFrame_1,
-      (-capture.width * $feedbackWindowSize_1) / 2 + $translateX_1,
-      (-capture.height * $feedbackWindowSize_1) / 2 + $translateY_1,
-      capture.width * $feedbackWindowSize_1,
-      capture.height * $feedbackWindowSize_1,
+      (-canvas.width * $feedbackWindowSize_1) / 2 + $translateX_1,
+      (-canvas.height * $feedbackWindowSize_1) / 2 + $translateY_1,
+      canvas.width * $feedbackWindowSize_1,
+      canvas.height * $feedbackWindowSize_1,
     );
 
     if ($feedbackInvert_1 == true) {
@@ -230,10 +230,10 @@
 
     p5.image(
       nextFrame_0,
-      -capture.width / 2,
-      -capture.height / 2,
-      capture.width,
-      capture.height,
+      -canvas.width / 2,
+      -canvas.height / 2,
+      canvas.width,
+      canvas.height,
     );
     //Not sure if this tint is working, might need both frame buffers to check
     p5.tint(255, 255);
@@ -241,10 +241,10 @@
 
     p5.image(
       nextFrame_1,
-      -capture.width / 2,
-      -capture.height / 2,
-      capture.width,
-      capture.height,
+      -canvas.width / 2,
+      -canvas.height / 2,
+      canvas.width,
+      canvas.height,
     );
 
     combinedFrame.end();
@@ -253,10 +253,10 @@
     p5.tint(255, 255);
     p5.image(
       combinedFrame,
-      -capture.width / 2,
-      -capture.height / 2,
-      capture.width,
-      capture.height,
+      -canvas.width / 2,
+      -canvas.height / 2,
+      canvas.width,
+      canvas.height,
     );
     // p5.tint(255);s
     //This inverts the inversion, so only the feedback path is inverted
