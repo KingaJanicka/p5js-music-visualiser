@@ -1,6 +1,6 @@
 <script lang="ts">
   import P5, { type Sketch } from "p5-svelte";
-  import type p5 from "p5";
+  import p5 from "p5";
   import exposure from "./exposure.frag";
   import contrastMatrix from "./contrastMatrixCustom.frag";
   import VisualizerControls from "./components/visualizerControls/visualizerControls.svelte";
@@ -37,6 +37,7 @@
   } from "./sharedStore";
   import VisualizerPageSelector from "./components/visualizerPageSelector/visualizerPageSelector.svelte";
   import VisualizerPreview from "./components/visualizerPreview/visualizerPreview.svelte";
+  import { flip } from "svelte/animate";
   let frameRate: number = 60;
   let prevFrame_0: p5.Framebuffer;
   let prevFrame_1: p5.Framebuffer;
@@ -81,7 +82,7 @@
 
     //For visualizer nr1
     if ($selectedVideoSource_0 != "Camera") {
-      video_0 = global_p5.createVideo(["/" + video_path_0]);
+      video_0 = global_p5.createVideo(["/" + video_path_0], { flipped: true });
       videoSource_0 = video_0 = global_p5.createVideo([
         "/" + $selectedVideoSource_0,
       ]);
@@ -251,6 +252,7 @@
   }
   function draw_image(p5) {
     p5.tint(255, 255);
+    p5.rotate(3.14159);
     p5.image(
       combinedFrame,
       -canvas.width / 2,
