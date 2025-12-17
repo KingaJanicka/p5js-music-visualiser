@@ -26,6 +26,7 @@
     input {
         writing-mode: vertical-lr;
         direction: rtl;
-        padding: 6em 5em;
+        height: 50vh;
+        /* padding: 6em 5em; */
     }
 </style>

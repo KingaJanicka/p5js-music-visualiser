@@ -69,10 +69,10 @@
     canvas = global_p5.createCanvas(640, 480, "webgl");
     let constraints = {
       video: {
-        mandatory: {
-          minWidth: canvas.width,
-          minHeight: canvas.height,
-        },
+        // mandatory: {
+        //   minWidth: canvas.width,
+        //   minHeight: canvas.height,
+        // },
         optional: [{ maxFrameRate: frameRate }],
       },
       audio: false,
@@ -246,6 +246,7 @@
       capture.width,
       capture.height,
     );
+
     combinedFrame.end();
   }
   function draw_image(p5) {

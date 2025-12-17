@@ -19,6 +19,6 @@
     input {
         writing-mode: horizontal-tb;
         direction: ltr;
-        padding: 0em 20em;
+        width: 100%;
     }
 </style>
