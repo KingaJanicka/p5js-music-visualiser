@@ -70,8 +70,8 @@
     let constraints = {
       video: {
         mandatory: {
-          minWidth: canvas.width,
-          minHeight: canvas.height,
+          innerWidth: canvas.width,
+          innerHeight: canvas.height,
         },
         optional: [{ maxFrameRate: frameRate }],
       },
