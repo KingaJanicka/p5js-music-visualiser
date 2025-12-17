@@ -69,10 +69,10 @@
     canvas = global_p5.createCanvas(640, 480, "webgl");
     let constraints = {
       video: {
-        // mandatory: {
-        //   minWidth: canvas.width,
-        //   minHeight: canvas.height,
-        // },
+        mandatory: {
+          minWidth: canvas.width,
+          minHeight: canvas.height,
+        },
         optional: [{ maxFrameRate: frameRate }],
       },
       audio: false,
@@ -80,8 +80,8 @@
     capture = global_p5.createCapture(constraints);
 
     //For visualizer nr1
-    video_0 = global_p5.createVideo(["/" + video_path_0]);
     if ($selectedVideoSource_0 != "Camera") {
+      video_0 = global_p5.createVideo(["/" + video_path_0]);
       videoSource_0 = video_0 = global_p5.createVideo([
         "/" + $selectedVideoSource_0,
       ]);
@@ -91,8 +91,8 @@
     }
 
     //For visualizer nr2
-    video_1 = global_p5.createVideo(["/" + video_path_1]);
     if ($selectedVideoSource_1 != "Camera") {
+      video_1 = global_p5.createVideo(["/" + video_path_1]);
       videoSource_1 = video_1 = global_p5.createVideo([
         "/" + $selectedVideoSource_1,
       ]);

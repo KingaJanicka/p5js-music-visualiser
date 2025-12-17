@@ -27,6 +27,5 @@
         writing-mode: vertical-lr;
         direction: rtl;
         height: 50vh;
-        /* padding: 6em 5em; */
     }
 </style>

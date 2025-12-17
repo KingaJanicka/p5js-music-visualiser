@@ -4,6 +4,9 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import glsl from 'vite-plugin-glsl';
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host: '0.0.0.0'
+  },
   plugins: [glsl(), svelte(), VitePWA({
     registerType: 'prompt',
     injectRegister: false,
