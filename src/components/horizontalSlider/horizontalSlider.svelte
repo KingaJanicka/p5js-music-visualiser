@@ -20,5 +20,6 @@
         writing-mode: horizontal-tb;
         direction: ltr;
         width: 100%;
+        height: 80px;
     }
 </style>
