@@ -11,7 +11,6 @@
         bind:value={valueToBind}
         min={props.min}
         max={props.max}
-        ondblclick={() => (valueToBind = props.default)}
     />
 </div>
 
