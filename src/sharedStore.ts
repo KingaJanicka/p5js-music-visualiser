@@ -58,7 +58,7 @@ export let selectedVideoSource_1 = writable("cat_pupils.webm");
 
 
 export let visualizerPage = writable(0);
-export let visualizerCrossfadeDefault: number = 0.5;
+export let visualizerCrossfadeDefault: number = 128;
 export let visualizerCrossfade = writable(visualizerCrossfadeDefault)
 
 export let selectedControl = writable(0);
