@@ -158,69 +158,111 @@
         </div>
     {:else}
         <div class="visualizerControls">
-            <DropdownMenu {videos} bind:selectedItem={$selectedVideoSource_1} />
-            <HorizontalSlider
-                bind:valueToBind={$colorShiftBrightness_1}
-                default={colorShiftBrightnessDefault}
-                min="-2.5"
-                max="2.5">Brightness</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$colorShiftContrast_1}
-                default={colorShiftContrastDefault}
-                min="-2.5"
-                max="2.5">Contrast</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$colorShiftR_1}
-                default={colorShiftRDefault}
-                min="0"
-                max="1">Red</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$colorShiftG_1}
-                default={colorShiftGDefault}
-                min="0"
-                max="1">Green</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$colorShiftB_1}
-                default={colorShiftBDefault}
-                min="0"
-                max="1">Blue</HorizontalSlider
-            ><HorizontalSlider
-                bind:valueToBind={$translateX_1}
-                default={translateXDefault}
-                min="-100"
-                max="100">Translate X</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$translateY_1}
-                default={translateYDefault}
-                min="-100"
-                max="100">Translate Y</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$feedbackWindowSize_1}
-                default={feedbackWindowSizeDefault}
-                min="0.5"
-                max="1.5">Feedback Size</HorizontalSlider
-            >
-            <HorizontalSlider
-                bind:valueToBind={$feedbackOpacity_1}
-                default={feedbackOpacityDefault}
-                min="0"
-                max="255">Feedback Opacity</HorizontalSlider
-            >
-            <ToggleButton bind:valueToBind={$feedbackInvert_1}
-                >Invert Feedback</ToggleButton
-            >
-            <HorizontalSlider
-                bind:valueToBind={$feedbackRotation_1}
-                default={feedbackRotationDefault}
-                min="-3.14"
-                max="3.14">Feedback Skew</HorizontalSlider
-            >
+            <div class="controlSelection">
+                <ButtonState idx="0" label="Src" />
+                <ButtonState idx="1" label="Br." />
+                <ButtonState idx="2" label="Cnt." />
+                <ButtonState idx="3" label="R" />
+                <ButtonState idx="4" label="G" />
+                <ButtonState idx="5" label="B" />
+                <ButtonState idx="6" label="F. X" />
+                <ButtonState idx="7" label="F. Y" />
+                <ButtonState idx="8" label="F. Size" />
+                <ButtonState idx="9" label="F. Opacity" />
+                <ButtonState idx="10" label="F. Inv" />
+                <ButtonState idx="11" label="F. Skew" />
+            </div>
+            <div class="controlContainer">
+                {#if $selectedControl === 0}
+                    <DropdownMenu
+                        {videos}
+                        bind:selectedItem={$selectedVideoSource_1}
+                    />
+                {/if}
+                {#if $selectedControl === 1}
+                    <HorizontalSlider
+                        bind:valueToBind={$colorShiftBrightness_1}
+                        default={colorShiftBrightnessDefault}
+                        min="-2.5"
+                        max="2.5">Brightness</HorizontalSlider
+                    >
+                {/if}
+                {#if $selectedControl === 2}
+                    <HorizontalSlider
+                        bind:valueToBind={$colorShiftContrast_1}
+                        default={colorShiftContrastDefault}
+                        min="-2.5"
+                        max="2.5">Contrast</HorizontalSlider
+                    >
+                {/if}
+                {#if $selectedControl === 3}
+                    <HorizontalSlider
+                        bind:valueToBind={$colorShiftR_1}
+                        default={colorShiftRDefault}
+                        min="0"
+                        max="1">Red</HorizontalSlider
+                    >
+                {/if}
+                {#if $selectedControl === 4}
+                    <HorizontalSlider
+                        bind:valueToBind={$colorShiftG_1}
+                        default={colorShiftGDefault}
+                        min="0"
+                        max="1">Green</HorizontalSlider
+                    >
+                {/if}
+                {#if $selectedControl === 5}
+                    <HorizontalSlider
+                        bind:valueToBind={$colorShiftB_1}
+                        default={colorShiftBDefault}
+                        min="0"
+                        max="1">Blue</HorizontalSlider
+                    >{/if}
+
+                {#if $selectedControl === 6}
+                    <HorizontalSlider
+                        bind:valueToBind={$translateX_1}
+                        default={translateXDefault}
+                        min="-100"
+                        max="100">Translate X</HorizontalSlider
+                    >{/if}
+                {#if $selectedControl === 7}
+                    <HorizontalSlider
+                        bind:valueToBind={$translateY_1}
+                        default={translateYDefault}
+                        min="-100"
+                        max="100">Translate Y</HorizontalSlider
+                    >
+                {/if}
+                {#if $selectedControl === 8}
+                    <HorizontalSlider
+                        bind:valueToBind={$feedbackWindowSize_1}
+                        default={feedbackWindowSizeDefault}
+                        min="0.5"
+                        max="1.5">Feedback Size</HorizontalSlider
+                    >{/if}
+                {#if $selectedControl === 9}
+                    <HorizontalSlider
+                        bind:valueToBind={$feedbackOpacity_1}
+                        default={feedbackOpacityDefault}
+                        min="0"
+                        max="255">Feedback Opacity</HorizontalSlider
+                    >{/if}
+
+                {#if $selectedControl === 10}
+                    <ToggleButton bind:valueToBind={$feedbackInvert_1}
+                        >Invert Feedback</ToggleButton
+                    >
+                {/if}
+                {#if $selectedControl === 11}
+                    <HorizontalSlider
+                        bind:valueToBind={$feedbackRotation_1}
+                        default={feedbackRotationDefault}
+                        min="-3.14"
+                        max="3.14">Feedback Skew</HorizontalSlider
+                    >
+                {/if}
+            </div>
         </div>
     {/if}
 </div>

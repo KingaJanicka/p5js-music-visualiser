@@ -62,7 +62,7 @@
     if (item != null) {
       if ($visualizerPage === 0) {
         $selectedVideoSource_0 = item;
-      } else if ($visualizerPage === 2) {
+      } else if ($visualizerPage === 1) {
         $selectedVideoSource_1 = item;
       }
     }
